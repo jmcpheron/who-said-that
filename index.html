@@ -91,46 +91,11 @@
                     </div>
                 </div>
 
-                <!-- Controls -->
+                <!-- Search Controls -->
                 <div class="controls">
-                    <div class="filter-group">
-                        <label for="engagement-filter">Min Student Engagement:</label>
-                        <input type="range" id="engagement-filter" min="0" max="100" value="0" class="slider">
-                        <span id="engagement-value">0%</span>
-                    </div>
-                    <div class="filter-group">
-                        <label for="confidence-filter">Min Confidence:</label>
-                        <input type="range" id="confidence-filter" min="0" max="100" value="0" class="slider">
-                        <span id="confidence-value">0%</span>
-                    </div>
-                    <div class="filter-group">
-                        <label for="speaker-filter">Show Speakers:</label>
-                        <select id="speaker-filter" class="filter-select">
-                            <option value="all">All Speakers</option>
-                            <option value="ai">AI Only</option>
-                            <option value="student">Student Only</option>
-                            <option value="unknown">Unknown Only</option>
-                        </select>
-                    </div>
                     <div class="search-group">
                         <input type="text" id="search-input" placeholder="Search transcripts..." class="search-input">
                         <button id="clear-search" class="btn btn-secondary">Clear</button>
-                    </div>
-                </div>
-
-                <!-- Visualizations -->
-                <div class="visualizations">
-                    <div class="chart-container">
-                        <h3>Student Engagement Distribution</h3>
-                        <canvas id="engagement-chart"></canvas>
-                    </div>
-                    <div class="chart-container">
-                        <h3>Confidence vs Engagement</h3>
-                        <canvas id="scatter-chart"></canvas>
-                    </div>
-                    <div class="chart-container">
-                        <h3>Confidence Score Distribution</h3>
-                        <canvas id="confidence-dist-chart"></canvas>
                     </div>
                 </div>
 

@@ -6,7 +6,7 @@ class TranscriptAnalyzer {
         this.transcripts = [];
         this.charts = {};
         this.currentSort = { field: 'filename', order: 'asc' };
-        this.filters = { engagement: 0, confidence: 0, search: '', speaker: 'all' };
+        this.filters = { search: '' };
         
         this.initializeApp();
         this.setupEventListeners();
@@ -60,19 +60,6 @@ class TranscriptAnalyzer {
             this.clearAllData();
         });
 
-        // Filters
-        document.getElementById('engagement-filter').addEventListener('input', (e) => {
-            this.filters.engagement = parseInt(e.target.value);
-            document.getElementById('engagement-value').textContent = `${e.target.value}%`;
-            this.applyFilters();
-        });
-
-        document.getElementById('confidence-filter').addEventListener('input', (e) => {
-            this.filters.confidence = parseInt(e.target.value);
-            document.getElementById('confidence-value').textContent = `${e.target.value}%`;
-            this.applyFilters();
-        });
-
         // Search
         document.getElementById('search-input').addEventListener('input', (e) => {
             this.filters.search = e.target.value.toLowerCase();
@@ -82,12 +69,6 @@ class TranscriptAnalyzer {
         document.getElementById('clear-search').addEventListener('click', () => {
             document.getElementById('search-input').value = '';
             this.filters.search = '';
-            this.applyFilters();
-        });
-        
-        // Speaker filter
-        document.getElementById('speaker-filter').addEventListener('change', (e) => {
-            this.filters.speaker = e.target.value;
             this.applyFilters();
         });
 
@@ -155,7 +136,6 @@ class TranscriptAnalyzer {
             this.showDashboard();
             this.updateDashboard();
             this.renderFileList();
-            this.createCharts();
 
         } catch (error) {
             console.error('Error processing files:', error);
@@ -1208,254 +1188,22 @@ class TranscriptAnalyzer {
 
     getFilteredTranscripts() {
         return this.transcripts.filter(transcript => {
-            const matchesEngagement = transcript.studentRatio >= this.filters.engagement;
-            const matchesConfidence = transcript.avgConfidence >= this.filters.confidence;
             const matchesSearch = this.filters.search === '' || 
                 transcript.filename.toLowerCase().includes(this.filters.search) ||
                 transcript.rawText.toLowerCase().includes(this.filters.search);
             
-            // Speaker filter logic
-            let matchesSpeaker = true;
-            if (this.filters.speaker !== 'all') {
-                const hasTargetSpeaker = transcript.segments.some(segment => 
-                    segment.speaker.toLowerCase() === this.filters.speaker.toLowerCase());
-                matchesSpeaker = hasTargetSpeaker;
-            }
-
-            return matchesEngagement && matchesConfidence && matchesSearch && matchesSpeaker;
+            return matchesSearch;
         });
     }
 
     applyFilters() {
         this.renderFileList();
-        this.updateCharts();
     }
 
     applySort() {
         this.renderFileList();
     }
 
-    createCharts() {
-        this.createEngagementChart();
-        this.createScatterChart();
-        this.createConfidenceDistributionChart();
-    }
-
-    createEngagementChart() {
-        const ctx = document.getElementById('engagement-chart').getContext('2d');
-        
-        if (this.charts.engagement) {
-            this.charts.engagement.destroy();
-        }
-
-        const data = this.transcripts.map(t => t.studentRatio);
-        const labels = this.transcripts.map(t => t.filename);
-
-        this.charts.engagement = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Student Engagement %',
-                    data: data,
-                    backgroundColor: data.map(val => 
-                        val > 30 ? '#22c55e' : val > 10 ? '#f59e0b' : '#ef4444'
-                    ),
-                    borderColor: '#374151',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100,
-                        title: {
-                            display: true,
-                            text: 'Student Engagement (%)'
-                        }
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Transcript Files'
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    createScatterChart() {
-        const ctx = document.getElementById('scatter-chart').getContext('2d');
-        
-        if (this.charts.scatter) {
-            this.charts.scatter.destroy();
-        }
-
-        const data = this.transcripts.map(t => ({
-            x: t.avgConfidence,
-            y: t.studentRatio,
-            label: t.filename
-        }));
-
-        this.charts.scatter = new Chart(ctx, {
-            type: 'scatter',
-            data: {
-                datasets: [{
-                    label: 'Transcripts',
-                    data: data,
-                    backgroundColor: '#3b82f6',
-                    borderColor: '#1d4ed8',
-                    pointRadius: 8,
-                    pointHoverRadius: 12
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const point = context.parsed;
-                                const filename = data[context.dataIndex].label;
-                                return `${filename}: ${point.y.toFixed(1)}% engagement, ${point.x.toFixed(1)}% confidence`;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Average Confidence (%)'
-                        },
-                        min: 0,
-                        max: 100
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Student Engagement (%)'
-                        },
-                        min: 0,
-                        max: 100
-                    }
-                }
-            }
-        });
-    }
-
-    createConfidenceDistributionChart() {
-        const ctx = document.getElementById('confidence-dist-chart').getContext('2d');
-        
-        if (this.charts.confidenceDist) {
-            this.charts.confidenceDist.destroy();
-        }
-
-        // Create confidence bins
-        const bins = {
-            'Low (0-50%)': 0,
-            'Medium (50-70%)': 0,
-            'High (70-90%)': 0,
-            'Very High (90-100%)': 0
-        };
-
-        this.transcripts.forEach(transcript => {
-            const confidence = transcript.avgConfidence;
-            if (confidence < 50) bins['Low (0-50%)']++;
-            else if (confidence < 70) bins['Medium (50-70%)']++;
-            else if (confidence < 90) bins['High (70-90%)']++;
-            else bins['Very High (90-100%)']++;
-        });
-
-        this.charts.confidenceDist = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: Object.keys(bins),
-                datasets: [{
-                    data: Object.values(bins),
-                    backgroundColor: [
-                        '#ef4444', // Red for low
-                        '#f59e0b', // Orange for medium  
-                        '#22c55e', // Green for high
-                        '#3b82f6'  // Blue for very high
-                    ],
-                    borderWidth: 2,
-                    borderColor: '#ffffff'
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                const percentage = ((context.parsed / total) * 100).toFixed(1);
-                                return `${context.label}: ${context.parsed} files (${percentage}%)`;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    updateCharts() {
-        const filtered = this.getFilteredTranscripts();
-        
-        // Update engagement chart
-        if (this.charts.engagement) {
-            this.charts.engagement.data.labels = filtered.map(t => t.filename);
-            this.charts.engagement.data.datasets[0].data = filtered.map(t => t.studentRatio);
-            this.charts.engagement.update();
-        }
-
-        // Update scatter chart
-        if (this.charts.scatter) {
-            const scatterData = filtered.map(t => ({
-                x: t.avgConfidence,
-                y: t.studentRatio,
-                label: t.filename
-            }));
-            this.charts.scatter.data.datasets[0].data = scatterData;
-            this.charts.scatter.update();
-        }
-        
-        // Update confidence distribution chart
-        if (this.charts.confidenceDist) {
-            const bins = {
-                'Low (0-50%)': 0,
-                'Medium (50-70%)': 0,
-                'High (70-90%)': 0,
-                'Very High (90-100%)': 0
-            };
-
-            filtered.forEach(transcript => {
-                const confidence = transcript.avgConfidence;
-                if (confidence < 50) bins['Low (0-50%)']++;
-                else if (confidence < 70) bins['Medium (50-70%)']++;
-                else if (confidence < 90) bins['High (70-90%)']++;
-                else bins['Very High (90-100%)']++;
-            });
-            
-            this.charts.confidenceDist.data.datasets[0].data = Object.values(bins);
-            this.charts.confidenceDist.update();
-        }
-    }
 
     exportAnalysis() {
         const data = this.transcripts.map(t => ({
@@ -1563,7 +1311,6 @@ AI: Certainly! Here's a detailed breakdown of the key concepts and their practic
             this.showDashboard();
             this.updateDashboard();
             this.renderFileList();
-            this.createCharts();
             this.showLoading(false);
         }, 1000);
     }
