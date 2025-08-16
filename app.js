@@ -1201,16 +1201,15 @@ class TranscriptAnalyzer {
 
 
     async loadDemoData() {
-        // Load synthetic transcript files from data/synthetic/ directory
+        // Load single demo transcript file
         this.showLoading(true);
         
         const syntheticFiles = [
-            { path: './data/synthetic/S01-M5-R7.txt', filename: 'S01-M5-R7.txt' },
-            { path: './data/synthetic/S02-K3-Q9.txt', filename: 'S02-K3-Q9.txt' }
+            { path: './data/synthetic/S01-M5-R7.txt', filename: 'S01-M5-R7.txt' }
         ];
 
         try {
-            // Fetch all synthetic files concurrently
+            // Fetch the demo file
             const responses = await Promise.all(
                 syntheticFiles.map(file => 
                     fetch(file.path).then(response => ({ response, filename: file.filename }))
