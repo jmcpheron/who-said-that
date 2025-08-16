@@ -928,7 +928,7 @@ class TranscriptAnalyzer {
 
         card.innerHTML = `
             <div class="file-card-header">
-                <h4>${transcript.filename}</h4>
+                <h4 class="filename-clickable" style="cursor: pointer; color: var(--primary-color);">${transcript.filename}</h4>
                 <button class="view-details-btn btn btn-primary" data-filename="${transcript.filename}">
                     📖 View Details
                 </button>
@@ -970,8 +970,13 @@ class TranscriptAnalyzer {
             </div>
         `;
 
-        // Add click handler for details
+        // Add click handler for details button
         card.querySelector('.view-details-btn').addEventListener('click', () => {
+            this.showTranscriptDetails(transcript);
+        });
+
+        // Add click handler for filename
+        card.querySelector('.filename-clickable').addEventListener('click', () => {
             this.showTranscriptDetails(transcript);
         });
 
