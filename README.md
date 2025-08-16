@@ -2,7 +2,7 @@
 
 **A powerful, client-side web application for analyzing AI-student conversations with advanced speaker identification and engagement metrics.**
 
-[![GitHub Pages](https://img.shields.io/badge/demo-live-brightgreen)](https://your-username.github.io/who-said-that)
+[![GitHub Pages](https://img.shields.io/badge/demo-live-brightgreen)](https://jmcpheron.github.io/who-said-that)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
 ## ✨ Features
@@ -34,13 +34,13 @@
 ## 🚀 Quick Start
 
 ### Option 1: Use Online (Recommended)
-1. Visit [**Live Demo**](https://your-username.github.io/who-said-that)
+1. Visit [**Live Demo**](https://jmcpheron.github.io/who-said-that)
 2. Upload your `.txt` transcript files or try the demo
 3. Analyze engagement patterns and export results
 
 ### Option 2: Run Locally
 ```bash
-git clone https://github.com/your-username/who-said-that.git
+git clone https://github.com/jmcpheron/who-said-that.git
 cd who-said-that
 # Open index.html in your browser
 ```
@@ -168,7 +168,7 @@ For academic use, please cite:
 
 ```
 "Speaker identification and engagement analysis performed using Who Said That? 
-Interactive Transcript Analyzer (https://github.com/your-username/who-said-that), 
+Interactive Transcript Analyzer (https://github.com/jmcpheron/who-said-that), 
 a client-side web application for educational conversation analysis."
 ```
 
@@ -180,6 +180,6 @@ a client-side web application for educational conversation analysis."
 
 ---
 
-**Ready to analyze your transcripts?** [**🚀 Try the Live Demo**](https://your-username.github.io/who-said-that)
+**Ready to analyze your transcripts?** [**🚀 Try the Live Demo**](https://jmcpheron.github.io/who-said-that)
 
 Perfect for researchers, educators, and anyone studying conversational dynamics in AI-human interactions!

@@ -1385,24 +1385,37 @@ class TranscriptAnalyzer {
     }
 
     async loadDemoData() {
-        // Load real transcript data for testing
+        // Load synthetic transcript files from data/synthetic/ directory
         this.showLoading(true);
         
+        const syntheticFiles = [
+            { path: './data/synthetic/S01-M5-R7.txt', filename: 'S01-M5-R7.txt' },
+            { path: './data/synthetic/S02-K3-Q9.txt', filename: 'S02-K3-Q9.txt' }
+        ];
+
         try {
-            // First try to load the real transcript file
-            const response = await fetch('./demo/P01-G8-S4.txt');
-            if (response.ok) {
-                const realTranscriptContent = await response.text();
-                const realTranscript = {
-                    filename: 'P01-G8-S4.txt (Real Transcript)',
-                    content: realTranscriptContent
-                };
-                
-                // Process the real transcript
-                this.transcripts = [];
-                const analysis = this.analyzeTranscript(realTranscript.content, realTranscript.filename);
-                this.transcripts.push(analysis);
-                
+            // Fetch all synthetic files concurrently
+            const responses = await Promise.all(
+                syntheticFiles.map(file => 
+                    fetch(file.path).then(response => ({ response, filename: file.filename }))
+                )
+            );
+
+            this.transcripts = [];
+
+            // Process each file that loaded successfully
+            for (const { response, filename } of responses) {
+                if (response.ok) {
+                    const content = await response.text();
+                    const analysis = this.analyzeTranscript(content, filename);
+                    this.transcripts.push(analysis);
+                } else {
+                    console.warn(`Failed to load ${filename}: ${response.status}`);
+                }
+            }
+
+            // If we loaded at least one file, show the dashboard
+            if (this.transcripts.length > 0) {
                 this.showDashboard();
                 this.updateDashboard();
                 this.renderFileList();
@@ -1411,97 +1424,32 @@ class TranscriptAnalyzer {
                 return;
             }
         } catch (error) {
-            console.log('Could not load real transcript, using synthetic data:', error);
+            console.log('Could not load synthetic transcript files:', error);
         }
         
-        // Fallback to enhanced demo data
-        const demoData = [
+        // Fallback to basic demo data if synthetic files can't be loaded
+        const fallbackData = [
             {
-                filename: 'quantum-computing-tutorial.txt',
-                content: `=== Page 00 ===
-**STEP 1: LEARNING ASSESSMENT**
+                filename: 'demo-conversation.txt',
+                content: `AI: Welcome to this learning session. Let's explore some concepts together.
 
-*Quantum Computing Instructor Introduction:*
-"Greetings! I'm here to determine your optimal quantum learning pathway. I'll pose several focused questions to assess your mathematical background and learning preferences."
+Student: I'm ready to learn.
 
-**First Question:**
-"When exploring quantum mechanics, do you prefer abstract mathematical formulations or concrete physical analogies?"
+AI: Great! Let's start with a simple question. What interests you most about this topic?
 
-A: abstract mathematical formulations
+Student: I'm curious about how it applies to real-world scenarios.
 
-Excellent. You flourish with mathematical rigor, formal structures, and precise notation—no metaphors needed, just focused quantum mechanics. Let's commence.
+AI: Excellent perspective! Real-world applications are crucial for understanding. Let me give you some examples...
 
-### **STEP 3: QUANTUM EXPLORATION**
+Student: That makes sense. Can you provide more details?
 
-**Your Task:** Propose your own quantum advantage scenario where classical approaches fail.
-
-A: A cryptographic system must factor a 2048-bit RSA modulus. The classical approach requires testing approximately 2^1024 potential factors—computationally infeasible even with modern supercomputers.
-
-Exceptional selection. Your scenario demonstrates a fundamental constraint: **exponential classical complexity** versus **polynomial quantum advantage**.
-
-**Why is the quantum state |ψ⟩ = (1/√N)Σ|x⟩ fundamentally unachievable classically?**
-
-A: The quantum state represents a uniform superposition over N computational basis states simultaneously. Classically, this would require storing and manipulating N separate probability amplitudes, where N = 2^n for n qubits.
-
-Perfect mathematical insight. You've identified the core limitation: **exponential classical storage requirements** versus **linear quantum register capacity**.`
-            },
-            {
-                filename: 'mixed-conversation.txt',
-                content: `AI: Welcome to today's session on machine learning fundamentals.
-
-Student: What's the difference between supervised and unsupervised learning?
-
-AI: Excellent question! Supervised learning uses labeled training data, where we know the correct answers. The algorithm learns to map inputs to outputs based on examples.
-
-Unsupervised learning, on the other hand, works with unlabeled data to find hidden patterns or structures.
-
-Student: Can you give me some examples?
-
-AI: Sure! For supervised learning:
-- Email spam detection (emails labeled as spam or not spam)
-- Image classification (photos labeled with objects they contain)
-- Stock price prediction (historical prices with known outcomes)
-
-For unsupervised learning:
-- Customer segmentation (grouping customers by behavior)
-- Anomaly detection (finding unusual patterns)
-- Topic modeling (discovering themes in text)
-
-Student: That makes sense! What about reinforcement learning?
-
-AI: Great follow-up question! Reinforcement learning is a third paradigm where an agent learns through trial and error by receiving rewards or penalties for its actions.
-
-Think of it like training a dog - you give treats for good behavior and corrections for bad behavior. The agent learns to maximize its rewards over time.
-
-Student: Like a game where you get points for good moves?
-
-AI: Exactly! Video games are perfect examples. The AI learns to play by trying different strategies and getting feedback through scores or winning/losing.`
-            },
-            {
-                filename: 'philosophy-debate.txt',
-                content: `**Dr. Martinez:** Welcome to our exploration of consciousness studies. What are your thoughts on whether philosophical zombies are logically possible?
-
-Student: I think philosophical zombies are conceptually incoherent. If consciousness arises from neural activity, then identical neural states must produce identical conscious experiences.
-
-**Dr. Martinez:** Fascinating position! But consider this challenge: If consciousness is purely physical, why does subjective experience feel so different from objective neural processes?
-
-Student: The "something it is like" might be an emergent property of complex information processing, similar to how wetness emerges from H2O molecules.
-
-**Dr. Martinez:** An interesting emergence argument. But notice the asymmetry - we can fully explain wetness in terms of molecular behavior, yet the "hard problem" of consciousness resists such reduction.
-
-Student: Perhaps the redness isn't a separate property but rather how the brain represents certain wavelengths. The subjective experience might be identical to the neural representation.
-
-**Dr. Martinez:** You're approaching an identity theory position. This connects to current debates about AI consciousness. If a sufficiently complex artificial system exhibited all the functional properties we associate with consciousness, would you consider it genuinely conscious?
-
-Student: Yes, I believe consciousness could be substrate-independent. What matters is the functional organization, not the specific material implementation.
-
-**Dr. Martinez:** A bold conclusion! You've traversed from materialism through functionalism to computational consciousness.`
+AI: Certainly! Here's a detailed breakdown of the key concepts and their practical implications.`
             }
         ];
 
         setTimeout(() => {
             this.transcripts = [];
-            demoData.forEach(demo => {
+            fallbackData.forEach(demo => {
                 const analysis = this.analyzeTranscript(demo.content, demo.filename);
                 this.transcripts.push(analysis);
             });
