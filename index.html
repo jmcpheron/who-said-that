@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -36,8 +37,8 @@
                     <div class="upload-content">
                         <div class="upload-icon">📁</div>
                         <h3>Drop transcript files here</h3>
-                        <p>Or click to browse (.txt files supported)</p>
-                        <input type="file" id="file-input" accept=".txt" multiple hidden>
+                        <p>Or click to browse (.txt and .docx files supported)</p>
+                        <input type="file" id="file-input" accept=".txt,.docx" multiple hidden>
                         <button id="browse-btn" class="btn btn-primary">Browse Files</button>
                     </div>
                 </div>

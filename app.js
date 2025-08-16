@@ -92,11 +92,12 @@ class TranscriptAnalyzer {
 
     async handleFiles(files) {
         const validFiles = Array.from(files).filter(file => 
-            file.type === 'text/plain' || file.name.endsWith('.txt')
+            file.type === 'text/plain' || file.name.endsWith('.txt') ||
+            file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || file.name.endsWith('.docx')
         );
 
         if (validFiles.length === 0) {
-            alert('Please select valid .txt files');
+            alert('Please select valid .txt or .docx files');
             return;
         }
 
@@ -109,7 +110,12 @@ class TranscriptAnalyzer {
                 const progress = ((i + 1) / validFiles.length) * 100;
                 this.updateProgress(progress, `Processing ${file.name}...`);
 
-                const text = await this.readFile(file);
+                let text;
+                if (file.name.endsWith('.docx') || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                    text = await this.processDocxFile(file);
+                } else {
+                    text = await this.readFile(file);
+                }
                 const analysis = this.analyzeTranscript(text, file.name);
                 this.transcripts.push(analysis);
 
@@ -136,6 +142,24 @@ class TranscriptAnalyzer {
             reader.onload = (e) => resolve(e.target.result);
             reader.onerror = reject;
             reader.readAsText(file);
+        });
+    }
+
+    processDocxFile(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const arrayBuffer = e.target.result;
+                    const result = await mammoth.extractRawText({arrayBuffer: arrayBuffer});
+                    resolve(result.value);
+                } catch (error) {
+                    console.error('Error processing DOCX file:', error);
+                    reject(new Error(`Failed to process DOCX file: ${error.message}`));
+                }
+            };
+            reader.onerror = () => reject(new Error('Failed to read file'));
+            reader.readAsArrayBuffer(file);
         });
     }
 
