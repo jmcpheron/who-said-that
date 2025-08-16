@@ -50,6 +50,16 @@ class TranscriptAnalyzer {
             this.loadDemoData();
         });
 
+        // Upload new files button
+        document.getElementById('upload-new-btn').addEventListener('click', () => {
+            this.returnToUpload();
+        });
+
+        // Clear all button
+        document.getElementById('clear-all-btn').addEventListener('click', () => {
+            this.clearAllData();
+        });
+
         // Filters
         document.getElementById('engagement-filter').addEventListener('input', (e) => {
             this.filters.engagement = parseInt(e.target.value);
@@ -896,6 +906,11 @@ class TranscriptAnalyzer {
         document.getElementById('upload-section').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
         document.getElementById('export-btn').disabled = false;
+        
+        // Show navigation buttons when dashboard is visible
+        document.getElementById('upload-new-btn').style.display = 'inline-block';
+        document.getElementById('clear-all-btn').style.display = 'inline-block';
+        document.getElementById('demo-btn').style.display = 'inline-block';
     }
 
     updateDashboard() {
@@ -1553,6 +1568,52 @@ AI: Certainly! Here's a detailed breakdown of the key concepts and their practic
             this.createCharts();
             this.showLoading(false);
         }, 1000);
+    }
+
+    returnToUpload() {
+        // Hide dashboard and show upload section
+        document.getElementById('dashboard').style.display = 'none';
+        document.getElementById('upload-section').style.display = 'block';
+        
+        // Hide navigation buttons
+        document.getElementById('upload-new-btn').style.display = 'none';
+        document.getElementById('clear-all-btn').style.display = 'none';
+        document.getElementById('export-btn').disabled = true;
+        
+        // Reset file input
+        document.getElementById('file-input').value = '';
+    }
+
+    clearAllData() {
+        // Confirm action
+        if (!confirm('Are you sure you want to clear all analyzed transcripts? This action cannot be undone.')) {
+            return;
+        }
+        
+        // Clear all data
+        this.transcripts = [];
+        
+        // Destroy existing charts
+        Object.values(this.charts).forEach(chart => {
+            if (chart) chart.destroy();
+        });
+        this.charts = {};
+        
+        // Return to upload view
+        this.returnToUpload();
+        
+        // Clear any dashboard content
+        document.getElementById('file-list').innerHTML = '';
+        
+        // Reset dashboard values
+        document.getElementById('total-files').textContent = '0';
+        document.getElementById('total-words').textContent = '0';
+        document.getElementById('avg-engagement').textContent = '0%';
+        document.getElementById('avg-confidence').textContent = '0%';
+        const coverageElement = document.getElementById('avg-coverage');
+        if (coverageElement) {
+            coverageElement.textContent = '100%';
+        }
     }
 
     showLoading(show) {
