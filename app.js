@@ -331,13 +331,28 @@ class TranscriptAnalyzer {
                 captureGroup: 0
             },
             {
-                pattern: /^(Think of|Propose|Calculate|Identify|Write down|Sketch|Address)/i,  // Instruction verbs
+                pattern: /^(Think of|Propose|Calculate|Identify|Write down|Sketch|Address|Imagine|Grab|Channel)/i,  // Instruction verbs
                 confidence: 0.9,
                 captureGroup: 0
             },
             {
-                pattern: /^(questions|emerged from|work of|indispensable when|situation where)/i,  // Educational language
+                pattern: /^(questions|emerged from|work of|indispensable when|situation where|researcher|detective)/i,  // Educational language
                 confidence: 0.9,
+                captureGroup: 0
+            },
+            {
+                pattern: /\b(Ready\?|prepared\?|sound good\?|make sense\?)\b/i,  // AI confirmation questions
+                confidence: 0.85,
+                captureGroup: 0
+            },
+            {
+                pattern: /^(Introduction|First Question|Second Question|Third Question|Fourth Question|Fifth Question)[:]/i,  // Question labels
+                confidence: 0.95,
+                captureGroup: 0
+            },
+            {
+                pattern: /\b(you could|you would|would you|do you prefer|how do you|what would you)\b/i,  // AI asking student preferences
+                confidence: 0.85,
                 captureGroup: 0
             },
             {
@@ -582,18 +597,24 @@ class TranscriptAnalyzer {
             return true;
         }
         
-        // Enhanced AI continuation logic
+        // Enhanced AI continuation logic with better multi-line support
         if (currentSegment.speaker === 'AI') {
-            // Don't continue AI if we hit a student marker or likely student response
-            if (trimmedLine.match(/^A:/i) || 
-                (newSpeaker === 'Student' && newConfidence > 0.8)) {
+            // Don't continue AI if we hit a clear student marker
+            if (trimmedLine.match(/^A:/i)) {
                 return false;
             }
-            // Continue AI unless it's a very short response (likely student)
-            if (trimmedLine.length < 20 && newSpeaker !== 'AI') {
+            
+            // Strong AI continuation cases
+            if (this.shouldContinueAISegment(currentSegment, trimmedLine, newSpeaker, newConfidence)) {
+                return true;
+            }
+            
+            // Don't continue if it's clearly a student response
+            if (newSpeaker === 'Student' && newConfidence > 0.8) {
                 return false;
             }
-            // Continue for similar or unknown classifications
+            
+            // Continue for unknown or low-confidence AI classifications
             return newSpeaker === 'AI' || newSpeaker === 'Unknown';
         }
         
@@ -613,6 +634,59 @@ class TranscriptAnalyzer {
         // Default: continue if same speaker or similar classification
         return currentSegment.speaker === newSpeaker || 
                (currentSegment.speaker === 'Unknown' && newSpeaker !== 'Unknown');
+    }
+    
+    shouldContinueAISegment(currentSegment, trimmedLine, newSpeaker, newConfidence) {
+        // Check if this looks like a continuation of an AI explanation
+        
+        // Continue if it's a sentence fragment or continuation
+        if (this.isSentenceFragment(trimmedLine)) {
+            return true;
+        }
+        
+        // Continue if the current segment ends with incomplete thought
+        const currentText = currentSegment.text.trim();
+        if (this.hasIncompleteEnding(currentText)) {
+            return true;
+        }
+        
+        // Continue if this line has educational content but low confidence, unless it's clearly student
+        if (this.hasInstructionalWords(trimmedLine) && newConfidence < 0.9 && newSpeaker !== 'Student') {
+            return true;
+        }
+        
+        // Continue question patterns within AI explanations
+        if (/\b(Ready\?|right\?|correct\?|make sense\?|understand\?)\b/i.test(trimmedLine)) {
+            return true;
+        }
+        
+        // Continue if it's a short explanatory phrase
+        if (trimmedLine.length < 60 && 
+            /\b(researcher|detective|gathering|first|big-picture|step-by-step)\b/i.test(trimmedLine)) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    isSentenceFragment(text) {
+        // Check if this looks like a sentence fragment
+        return (
+            text.length < 50 && 
+            !/^[A-Z]/.test(text) &&  // Doesn't start with capital
+            !/[.!?]$/.test(text) &&  // Doesn't end with punctuation
+            !/^(yes|no|maybe|direct|i |because)/i.test(text)  // Not a typical student response
+        );
+    }
+    
+    hasIncompleteEnding(text) {
+        // Check if the text ends with an incomplete thought
+        return (
+            /[,;—–-]$/.test(text) ||  // Ends with comma, semicolon, or dash
+            /\b(like|and|or|but|so|then|when|where|which|that|who)$/i.test(text) ||  // Ends with conjunction/relative
+            /\(\s*$/.test(text) ||  // Ends with open parenthesis
+            /"[^"]*$/.test(text)  // Has unclosed quote
+        );
     }
     
     hasInstructionalWords(text) {
@@ -701,13 +775,32 @@ class TranscriptAnalyzer {
             aiScore -= 0.7; // Short questions more likely from students
         }
         
-        // Contextual analysis - check if this follows an AI question (more conservative)
-        if (prevSegment && prevSegment.speaker === 'AI' && 
-            prevSegment.text.includes('?') && 
-            features.wordCount < 20 && 
-            features.hasCasual && 
-            !features.hasInstructional) {
-            aiScore -= 0.6; // Only apply if clearly casual and non-instructional
+        // Enhanced contextual analysis
+        if (prevSegment && prevSegment.speaker === 'AI') {
+            // If this follows an AI question and looks like a short casual answer
+            if (prevSegment.text.includes('?') && 
+                features.wordCount < 20 && 
+                features.hasCasual && 
+                !features.hasInstructional) {
+                aiScore -= 0.6;
+            }
+            
+            // If this looks like a continuation of AI explanation
+            if (this.hasIncompleteEnding(prevSegment.text) && 
+                features.wordCount < 30 && 
+                !features.hasCasual) {
+                aiScore += 0.5; // Likely AI continuation
+            }
+        }
+        
+        // Penalize fragment-like text that's not instructional
+        if (this.isSentenceFragment(text) && !features.hasInstructional) {
+            aiScore -= 0.4;
+        }
+        
+        // Boost instructional fragments (likely AI continuations)
+        if (this.isSentenceFragment(text) && features.hasInstructional) {
+            aiScore += 0.6;
         }
         
         // Mathematical expressions (context dependent)
