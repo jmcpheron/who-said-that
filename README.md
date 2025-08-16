@@ -3,7 +3,7 @@
 **A powerful, client-side web application for analyzing AI-student conversations with advanced speaker identification and engagement metrics.**
 
 [![GitHub Pages](https://img.shields.io/badge/demo-live-brightgreen)](https://your-username.github.io/who-said-that)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
 ## ✨ Features
 
@@ -160,7 +160,7 @@ Contributions welcome! Areas for improvement:
 
 ## 📄 License
 
-MIT License - feel free to use in your research and projects.
+GNU Affero General Public License v3.0. See `LICENSE` for details.
 
 ## 📚 Citation
 
