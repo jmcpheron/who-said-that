@@ -84,11 +84,6 @@ class TranscriptAnalyzer {
             this.applySort();
         });
 
-        // Export
-        document.getElementById('export-btn').addEventListener('click', () => {
-            this.exportAnalysis();
-        });
-
         // Modal
         document.getElementById('close-modal').addEventListener('click', () => {
             this.closeModal();
@@ -877,7 +872,6 @@ class TranscriptAnalyzer {
     showDashboard() {
         document.getElementById('upload-section').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
-        document.getElementById('export-btn').disabled = false;
         
         // Show navigation buttons when dashboard is visible
         document.getElementById('upload-new-btn').style.display = 'inline-block';
@@ -935,8 +929,8 @@ class TranscriptAnalyzer {
         card.innerHTML = `
             <div class="file-card-header">
                 <h4>${transcript.filename}</h4>
-                <button class="view-details-btn" data-filename="${transcript.filename}">
-                    View Details
+                <button class="view-details-btn btn btn-primary" data-filename="${transcript.filename}">
+                    📖 View Details
                 </button>
             </div>
             <div class="file-card-stats">
@@ -1205,38 +1199,6 @@ class TranscriptAnalyzer {
     }
 
 
-    exportAnalysis() {
-        const data = this.transcripts.map(t => ({
-            filename: t.filename,
-            student_ratio: t.studentRatio.toFixed(2),
-            ai_words: t.aiWords,
-            student_words: t.studentWords,
-            total_words: t.totalWords,
-            avg_confidence: t.avgConfidence.toFixed(2),
-            segments: t.segments.length
-        }));
-
-        this.downloadCSV(data, 'transcript_analysis.csv');
-    }
-
-    downloadCSV(data, filename) {
-        const headers = Object.keys(data[0]);
-        const csvContent = [
-            headers.join(','),
-            ...data.map(row => headers.map(header => `"${row[header]}"`).join(','))
-        ].join('\n');
-
-        const blob = new Blob([csvContent], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-    }
 
     async loadDemoData() {
         // Load synthetic transcript files from data/synthetic/ directory
@@ -1323,7 +1285,6 @@ AI: Certainly! Here's a detailed breakdown of the key concepts and their practic
         // Hide navigation buttons
         document.getElementById('upload-new-btn').style.display = 'none';
         document.getElementById('clear-all-btn').style.display = 'none';
-        document.getElementById('export-btn').disabled = true;
         
         // Reset file input
         document.getElementById('file-input').value = '';
