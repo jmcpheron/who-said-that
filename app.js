@@ -60,17 +60,6 @@ class TranscriptAnalyzer {
             this.clearAllData();
         });
 
-        // Search
-        document.getElementById('search-input').addEventListener('input', (e) => {
-            this.filters.search = e.target.value.toLowerCase();
-            this.applyFilters();
-        });
-
-        document.getElementById('clear-search').addEventListener('click', () => {
-            document.getElementById('search-input').value = '';
-            this.filters.search = '';
-            this.applyFilters();
-        });
 
         // Sorting
         document.getElementById('sort-select').addEventListener('change', (e) => {
@@ -880,24 +869,7 @@ class TranscriptAnalyzer {
     }
 
     updateDashboard() {
-        if (this.transcripts.length === 0) return;
-
-        const totalFiles = this.transcripts.length;
-        const totalWords = this.transcripts.reduce((sum, t) => sum + t.totalWords, 0);
-        const avgEngagement = this.transcripts.reduce((sum, t) => sum + t.studentRatio, 0) / totalFiles;
-        const avgConfidence = this.transcripts.reduce((sum, t) => sum + t.avgConfidence, 0) / totalFiles;
-
-        document.getElementById('total-files').textContent = totalFiles;
-        document.getElementById('total-words').textContent = totalWords.toLocaleString();
-        document.getElementById('avg-engagement').textContent = `${avgEngagement.toFixed(1)}%`;
-        document.getElementById('avg-confidence').textContent = `${avgConfidence.toFixed(1)}%`;
-        
-        // Add coverage information if element exists
-        const avgCoverage = this.transcripts.reduce((sum, t) => sum + (t.coverage || 100), 0) / totalFiles;
-        const coverageElement = document.getElementById('avg-coverage');
-        if (coverageElement) {
-            coverageElement.textContent = `${avgCoverage.toFixed(1)}%`;
-        }
+        // Dashboard stats removed for cleaner interface
     }
 
     renderFileList() {
@@ -1313,16 +1285,6 @@ AI: Certainly! Here's a detailed breakdown of the key concepts and their practic
         
         // Clear any dashboard content
         document.getElementById('file-list').innerHTML = '';
-        
-        // Reset dashboard values
-        document.getElementById('total-files').textContent = '0';
-        document.getElementById('total-words').textContent = '0';
-        document.getElementById('avg-engagement').textContent = '0%';
-        document.getElementById('avg-confidence').textContent = '0%';
-        const coverageElement = document.getElementById('avg-coverage');
-        if (coverageElement) {
-            coverageElement.textContent = '100%';
-        }
     }
 
     showLoading(show) {
