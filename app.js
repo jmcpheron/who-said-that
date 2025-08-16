@@ -1191,9 +1191,15 @@ class TranscriptAnalyzer {
             .replace(/(A:|Student:|AI:|Assistant:)/gi, '<span class="speaker-marker">$1</span>') // Speaker markers
             .replace(/(=== Page \d+ ===)/g, '<span class="page-marker">$1</span>') // Page markers
             .replace(/\\\([^)]+\\\)/g, '<span class="latex-inline">$&</span>') // LaTeX inline math
-            .replace(/\\\[[^\]]+\\\]/g, '<span class="latex-display">$&</span>') // LaTeX display math
+            .replace(/\\\[[^\]]+\\\]/g, '<div class="latex-display">$&</div>') // LaTeX display math as block
             .replace(/\\([^\s]+)\{/g, '<span class="latex-command">\\$1{</span>') // LaTeX commands
-            .replace(/\|([^|]+)\|/g, '<span class="math-expression">|$1|</span>'); // Math expressions
+            .replace(/\|([^|]+)\|/g, '<span class="math-expression">|$1|</span>') // Math expressions
+            .replace(/###\s*([^#\n]+)/g, '<h4 class="section-header">$1</h4>') // Section headers
+            .replace(/^\s*(\d+\.)\s*(.+)$/gm, '<div class="numbered-item"><span class="number">$1</span>$2</div>') // Numbered lists
+            .replace(/^\s*[-•]\s*(.+)$/gm, '<div class="bullet-item"><span class="bullet">•</span>$1</div>') // Bullet points
+            .replace(/\(([^)]+)\)(?=\s*$)/gm, '<span class="parenthetical">($1)</span>') // Parenthetical notes at end of lines
+            .replace(/\n\s*\n/g, '<br><br>') // Double line breaks for paragraphs
+            .replace(/\n/g, '<br>'); // Single line breaks
     }
 
     closeModal() {
