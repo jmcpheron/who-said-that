@@ -411,14 +411,6 @@ class TranscriptAnalyzer {
             {
                 pattern: /^\s*$/,  // Empty lines
                 confidence: 1.0
-            },
-            {
-                pattern: /^\\\[(.*)\\\]$/,  // LaTeX display math
-                confidence: 0.9
-            },
-            {
-                pattern: /^\\\((.*)\\\)$/,  // LaTeX inline math
-                confidence: 0.9
             }
         ];
 
