@@ -1234,7 +1234,6 @@ class TranscriptAnalyzer {
                 this.showDashboard();
                 this.updateDashboard();
                 this.renderFileList();
-                this.createCharts();
                 this.showLoading(false);
                 return;
             }
