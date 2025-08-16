@@ -1205,7 +1205,7 @@ class TranscriptAnalyzer {
         this.showLoading(true);
         
         const syntheticFiles = [
-            { path: './data/synthetic/S01-M5-R7.txt', filename: 'S01-M5-R7.txt' }
+            { path: 'data/synthetic/S01-M5-R7.txt', filename: 'S01-M5-R7.txt' }
         ];
 
         try {
@@ -1238,14 +1238,13 @@ class TranscriptAnalyzer {
                 return;
             }
         } catch (error) {
-            console.log('Could not load synthetic transcript files:', error);
-        }
-        
-        // Fallback to basic demo data if synthetic files can't be loaded
-        const fallbackData = [
-            {
-                filename: 'demo-conversation.txt',
-                content: `AI: Welcome to this learning session. Let's explore some concepts together.
+            console.error('Could not load synthetic transcript files:', error);
+            
+            // Fallback to basic demo data if synthetic files can't be loaded
+            const fallbackData = [
+                {
+                    filename: 'demo-conversation.txt',
+                    content: `AI: Welcome to this learning session. Let's explore some concepts together.
 
 Student: I'm ready to learn.
 
@@ -1258,21 +1257,22 @@ AI: Excellent perspective! Real-world applications are crucial for understanding
 Student: That makes sense. Can you provide more details?
 
 AI: Certainly! Here's a detailed breakdown of the key concepts and their practical implications.`
-            }
-        ];
+                }
+            ];
 
-        setTimeout(() => {
-            this.transcripts = [];
-            fallbackData.forEach(demo => {
-                const analysis = this.analyzeTranscript(demo.content, demo.filename);
-                this.transcripts.push(analysis);
-            });
+            setTimeout(() => {
+                this.transcripts = [];
+                fallbackData.forEach(demo => {
+                    const analysis = this.analyzeTranscript(demo.content, demo.filename);
+                    this.transcripts.push(analysis);
+                });
 
-            this.showDashboard();
-            this.updateDashboard();
-            this.renderFileList();
-            this.showLoading(false);
-        }, 1000);
+                this.showDashboard();
+                this.updateDashboard();
+                this.renderFileList();
+                this.showLoading(false);
+            }, 1000);
+        }
     }
 
     returnToUpload() {
