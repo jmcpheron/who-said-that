@@ -13,30 +13,30 @@
 - Content-based analysis using linguistic patterns
 - Real-time processing with visual confidence indicators
 
-### 📊 **Interactive Analytics**
-- Dynamic engagement distribution charts
-- Confidence vs engagement scatter plots
-- Filterable transcript library
-- Real-time search and sorting
+### 📊 **Clean Interface**
+- Streamlined file-focused interface
+- Clickable filenames for quick access
+- Modal-based detailed analysis view
+- Distraction-free transcript browsing
 
 ### 🔍 **Detailed Analysis**
 - Segment-by-segment breakdown with speaker confidence
 - Word count statistics and engagement ratios
-- Mathematical expression and question highlighting
-- Quality assessment with actionable flags
+- Enhanced LaTeX mathematical formula rendering
+- Speaker filtering and conversation navigation
 
 ### 📁 **Easy File Management**
 - Drag-and-drop file upload
 - Batch processing of multiple transcripts
-- Demo data for immediate testing
-- Export results to CSV format
+- One-click demo with educational content
+- Simple, focused file analysis workflow
 
 ## 🚀 Quick Start
 
 ### Option 1: Use Online (Recommended)
 1. Visit [**Live Demo**](https://jmcpheron.github.io/who-said-that)
 2. Upload your `.txt` transcript files or try the demo
-3. Analyze engagement patterns and export results
+3. Click filenames or "View Details" to analyze conversations
 
 ### Option 2: Run Locally
 ```bash
@@ -50,21 +50,19 @@ cd who-said-that
 ### 1. **Upload Transcripts**
 - Drag and drop `.txt` files onto the upload area
 - Or click "Browse Files" to select multiple files
-- Try "Load Demo" for sample data
+- Try "Load Demo" for sample educational content
 
-### 2. **Analyze Results**
-- View summary statistics cards
-- Use filters to focus on specific engagement levels
-- Search transcripts by filename or content
+### 2. **Browse Results**
+- View clean list of analyzed transcript files
+- See key metrics (engagement, confidence, word count) at a glance
+- Files display with essential statistics in compact cards
 
 ### 3. **Explore Details**
-- Click "View Details" on any transcript
+- Click the filename or "View Details" button
 - See segment-by-segment speaker identification
-- Review confidence scores and patterns
-
-### 4. **Export Data**
-- Click "Export Analysis" to download CSV
-- Perfect for research and further analysis
+- Review confidence scores and conversation patterns
+- Filter by speaker type (AI, Student, etc.)
+- View LaTeX mathematical formulas in context
 
 ## 📈 Understanding the Analysis
 
@@ -92,8 +90,8 @@ Perfect for educational research involving:
 
 ### Sample Research Workflow
 1. Upload conversation transcripts
-2. Filter for high-engagement sessions (>40% student ratio)
-3. Export data for statistical analysis
+2. Browse file list for quick overview of engagement levels
+3. Click high-engagement files to examine patterns
 4. Use detailed view to identify successful interaction patterns
 
 ## 🛠️ Technical Details
@@ -108,21 +106,21 @@ Perfect for educational research involving:
 - **Multi-Pattern Detection**: Combines explicit markers with content analysis
 - **Confidence Scoring**: Machine learning-inspired feature extraction
 - **Real-Time Processing**: Instant results as files are uploaded
-- **Export Ready**: CSV output for research tools
+- **LaTeX Support**: Enhanced mathematical formula rendering
 
 ### Built With
 - Vanilla JavaScript (no frameworks for maximum compatibility)
-- Chart.js for interactive visualizations
-- Modern CSS with responsive design
-- Progressive Web App capabilities
+- Modern CSS with responsive design and smooth animations
+- LaTeX mathematical expression highlighting
+- Modal-based detailed analysis interface
 
 ## 📊 Sample Results
 
-| Transcript | Student Engagement | Confidence | Words | Quality |
-|------------|-------------------|------------|-------|---------|
-| quantum-tutorial.txt | 24.5% | 89.2% | 1,472 | ✅ Good |
-| neural-interface.txt | 18.7% | 92.1% | 1,154 | ✅ Good |
-| philosophy-debate.txt | 42.3% | 85.6% | 987 | ✅ Good |
+| Transcript | Student Engagement | Confidence | Words | Features |
+|------------|-------------------|------------|-------|----------|
+| S01-M5-R7.txt | 10.0% | 96.3% | 1,443 | 🧮 LaTeX Math |
+| quantum-tutorial.txt | 24.5% | 89.2% | 1,472 | ✅ High Quality |
+| philosophy-debate.txt | 42.3% | 85.6% | 987 | 💬 Interactive |
 
 ## 🎯 Comparison with Other Tools
 
@@ -132,7 +130,7 @@ Perfect for educational research involving:
 | **Speed** | ✅ Instant | ⚠️ API limits | ❌ Time-intensive |
 | **Confidence Scores** | ✅ Built-in | ❌ No scores | ⚠️ Subjective |
 | **Batch Processing** | ✅ Multiple files | ⚠️ One at a time | ❌ Manual |
-| **Export Ready** | ✅ CSV format | ⚠️ Copy/paste | ⚠️ Manual entry |
+| **LaTeX Support** | ✅ Enhanced rendering | ❌ No support | ⚠️ Manual formatting |
 | **Privacy** | ✅ Client-side | ❌ Sends to API | ✅ Local |
 
 ## 📁 Project Structure
@@ -142,10 +140,9 @@ who-said-that/
 ├── index.html          # Main application
 ├── app.js              # Analysis engine
 ├── styles.css          # Modern styling
-├── demo/               # Sample transcript files
-│   ├── quantum-computing-tutorial.txt
-│   ├── neural-interface-session.txt
-│   └── philosophy-debate.txt
+├── data/synthetic/     # Demo transcript files
+│   ├── S01-M5-R7.txt   # Taylor polynomial tutorial
+│   └── S02-K3-Q9.txt   # Neural network analysis
 ├── .github/workflows/  # GitHub Pages deployment
 └── README.md           # This file
 ```
@@ -154,9 +151,9 @@ who-said-that/
 
 Contributions welcome! Areas for improvement:
 - Additional speaker detection patterns
-- New visualization types
-- Export format options
-- Mobile interface enhancements
+- Enhanced LaTeX mathematical expression support
+- Mobile interface optimizations
+- Accessibility improvements
 
 ## 📄 License
 
