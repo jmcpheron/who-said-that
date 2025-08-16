@@ -245,6 +245,55 @@ class TranscriptAnalyzer {
             }
         ];
 
+        // Simplified and more reliable student patterns
+        const likelyStudentPatterns = [
+            {
+                // Simple one-word responses
+                pattern: /^(yes|no|maybe|both)$/i,
+                confidence: 0.95,
+                condition: (text, prevSegment) => {
+                    return text.length < 10 && 
+                           prevSegment && prevSegment.speaker === 'AI';
+                }
+            },
+            {
+                // Direct preference responses
+                pattern: /^(direct|conversational|immediate|hint|mix)[\s,]*[a-z\s]*$/i,
+                confidence: 0.9,
+                condition: (text) => {
+                    return text.length < 40 && 
+                           !this.hasInstructionalWords(text);
+                }
+            },
+            {
+                // Personal responses starting with "I"
+                pattern: /^i (think|like|don't|do|would|prefer)[\s\w]*$/i,
+                confidence: 0.9,
+                condition: (text) => {
+                    return text.length < 60 && 
+                           !this.hasInstructionalWords(text);
+                }
+            },
+            {
+                // Short casual explanations
+                pattern: /^because[\s\w]{1,30}$/i,
+                confidence: 0.8,
+                condition: (text) => {
+                    return text.length < 50 && 
+                           !this.hasInstructionalWords(text);
+                }
+            },
+            {
+                // Simple topic responses
+                pattern: /^(the real|airplane|computer|math|science)[\s\w]{0,30}$/i,
+                confidence: 0.8,
+                condition: (text) => {
+                    return text.length < 50 && 
+                           !this.hasInstructionalWords(text);
+                }
+            }
+        ];
+
         const aiPatterns = [
             {
                 pattern: /^\*".*"\*?$/,  // Quoted instructions - highest priority
@@ -272,13 +321,38 @@ class TranscriptAnalyzer {
                 captureGroup: 0
             },
             {
-                pattern: /^(Excellent|Outstanding|Perfect|Great|Good|Correct)\b.*$/i,  // AI feedback
+                pattern: /^(Teacher|AI Profiler|Instructor)[\s\(\:]/i,  // Teacher/AI speaker labels
                 confidence: 0.95,
                 captureGroup: 0
             },
             {
-                pattern: /^(Got it|Let's|Your task|Welcome|Greetings|Preparation)\b.*$/i,
+                pattern: /^(Taylor polynomials|Historical Context|Preparation|Your Task|Structured|Key Constraints)/i,  // Educational/instructional openings
+                confidence: 0.95,
+                captureGroup: 0
+            },
+            {
+                pattern: /^(Think of|Propose|Calculate|Identify|Write down|Sketch|Address)/i,  // Instruction verbs
                 confidence: 0.9,
+                captureGroup: 0
+            },
+            {
+                pattern: /^(questions|emerged from|work of|indispensable when|situation where)/i,  // Educational language
+                confidence: 0.9,
+                captureGroup: 0
+            },
+            {
+                pattern: /^(Excellent|Outstanding|Perfect|Great|Good|Correct|Got it|Noted|Exactly)\b.*$/i,  // AI feedback
+                confidence: 0.95,
+                captureGroup: 0
+            },
+            {
+                pattern: /^(Let's|Your task|Welcome|Greetings|Preparation|Example|Rule Reminder)\b.*$/i,
+                confidence: 0.9,
+                captureGroup: 0
+            },
+            {
+                pattern: /\(e\.g\.|for example|such as|like|similar to\)/i,  // Explanatory patterns
+                confidence: 0.85,
                 captureGroup: 0
             },
             {
@@ -387,6 +461,20 @@ class TranscriptAnalyzer {
                 }
             }
 
+            // Check for likely student patterns if no explicit markers found
+            if (!speaker) {
+                const prevSegment = segments.length > 0 ? segments[segments.length - 1] : null;
+                for (const studentPattern of likelyStudentPatterns) {
+                    const match = trimmedLine.match(studentPattern.pattern);
+                    if (match && studentPattern.condition(trimmedLine, prevSegment)) {
+                        speaker = 'Student';
+                        confidence = studentPattern.confidence;
+                        cleanText = trimmedLine;
+                        break;
+                    }
+                }
+            }
+
             // Check for AI markers if no student marker found
             if (!speaker) {
                 for (const aiMarker of aiPatterns) {
@@ -405,23 +493,33 @@ class TranscriptAnalyzer {
                 }
             }
 
-            // Content-based analysis if no explicit markers
+            // Enhanced content-based analysis if no explicit markers
             if (!speaker) {
-                const result = this.classifyBySpeakerContent(trimmedLine);
+                const prevSegment = segments.length > 0 ? segments[segments.length - 1] : null;
+                const result = this.classifyBySpeakerContent(trimmedLine, prevSegment);
                 speaker = result.speaker;
                 confidence = result.confidence;
                 cleanText = trimmedLine;
                 
-                // If still no clear classification, use better defaults
+                // If still no clear classification, use contextual defaults (more conservative)
                 if (speaker === 'Unknown' || confidence < 0.6) {
-                    // Default to AI for long instructional content
-                    if (trimmedLine.length > 50 && this.hasInstructionalWords(trimmedLine)) {
+                    // Default to AI for instructional content
+                    if (this.hasInstructionalWords(trimmedLine)) {
                         speaker = 'AI';
+                        confidence = 0.8;
+                    }
+                    // Only classify as student if very short, casual, and clearly after a question
+                    else if (prevSegment && prevSegment.speaker === 'AI' && 
+                             prevSegment.text.includes('?') && 
+                             trimmedLine.length < 50 && 
+                             /^(yes|no|i |maybe|both|direct|hint)[\s\w]*$/i.test(trimmedLine) &&
+                             !this.hasInstructionalWords(trimmedLine)) {
+                        speaker = 'Student';
                         confidence = 0.75;
                     }
-                    // Default to student for short responses or after seeing student content
-                    else if (currentSegment && currentSegment.speaker === 'Student' && trimmedLine.length < 30) {
-                        speaker = 'Student';
+                    // Default to AI for longer content
+                    else if (trimmedLine.length > 30) {
+                        speaker = 'AI';
                         confidence = 0.7;
                     }
                 }
@@ -470,37 +568,64 @@ class TranscriptAnalyzer {
             return true;
         }
         
-        // Strong continuation for student responses after A:
-        if (currentSegment.speaker === 'Student' && newSpeaker !== 'AI') {
-            // Continue student responses unless we hit a clear AI marker
-            if (!this.isStrongAIMarker(trimmedLine)) {
-                return true;
+        // Enhanced student continuation logic
+        if (currentSegment.speaker === 'Student') {
+            // Don't continue student if we hit a clear AI marker
+            if (this.isStrongAIMarker(trimmedLine)) {
+                return false;
             }
+            // Continue student responses unless new speaker is AI with high confidence
+            if (newSpeaker === 'AI' && newConfidence > 0.85) {
+                return false;
+            }
+            // Continue for unknown or low-confidence classifications
+            return true;
         }
         
-        // Continue AI instructional content
-        if (currentSegment.speaker === 'AI' && newSpeaker !== 'Student') {
-            // Continue AI unless we hit student marker
-            if (!trimmedLine.match(/^A:/i) && newConfidence < 0.9) {
-                return true;
+        // Enhanced AI continuation logic
+        if (currentSegment.speaker === 'AI') {
+            // Don't continue AI if we hit a student marker or likely student response
+            if (trimmedLine.match(/^A:/i) || 
+                (newSpeaker === 'Student' && newConfidence > 0.8)) {
+                return false;
+            }
+            // Continue AI unless it's a very short response (likely student)
+            if (trimmedLine.length < 20 && newSpeaker !== 'AI') {
+                return false;
+            }
+            // Continue for similar or unknown classifications
+            return newSpeaker === 'AI' || newSpeaker === 'Unknown';
+        }
+        
+        // For Unknown segments, be more willing to switch
+        if (currentSegment.speaker === 'Unknown') {
+            // Switch if we have a confident classification
+            if (newConfidence > 0.75) {
+                return false;
             }
         }
         
         // If current segment has low confidence and new detection is high confidence, switch
-        if (currentSegment.confidence < 0.7 && newConfidence > 0.9) {
+        if (currentSegment.confidence < 0.65 && newConfidence > 0.85) {
             return false;
         }
         
-        // Otherwise, only continue if same speaker
-        return currentSegment.speaker === newSpeaker;
+        // Default: continue if same speaker or similar classification
+        return currentSegment.speaker === newSpeaker || 
+               (currentSegment.speaker === 'Unknown' && newSpeaker !== 'Unknown');
     }
     
     hasInstructionalWords(text) {
         const instructionalPatterns = [
-            /\b(calculate|solve|analyze|determine|explain|describe|write|sketch)\b/i,
-            /\b(your task|assignment|exercise|problem)\b/i,
-            /\b(let's|now|here's|this|we'll)\b/i,
-            /\b(step|approach|method|solution)\b/i
+            /\b(calculate|solve|analyze|determine|explain|describe|write|sketch|think|propose|identify)\b/i,
+            /\b(your task|assignment|exercise|problem|your response|example)\b/i,
+            /\b(let's|now|here's|this|we'll|you'll|consider|examine)\b/i,
+            /\b(step|approach|method|solution|strategy|breakdown|analysis)\b/i,
+            /\b(emerged from|work of|indispensable|critical|complex|system|function)\b/i,
+            /\b(polynomials|equations|approximation|calculations|mathematical|engineering)\b/i,
+            /\b(historical|context|structured|guided|preparation)\b/i,
+            /\(e\.g\./i,
+            /\b(for example|such as|hint|nudge)\b/i
         ];
         return instructionalPatterns.some(pattern => pattern.test(text));
     }
@@ -534,11 +659,11 @@ class TranscriptAnalyzer {
         return aiIndicators.some(pattern => pattern.test(text));
     }
 
-    classifyBySpeakerContent(text) {
+    classifyBySpeakerContent(text, prevSegment = null) {
         const features = this.analyzeTextFeatures(text);
         let aiScore = 0;
         
-        // Enhanced content-based classification with higher thresholds
+        // Enhanced content-based classification with reduced AI bias
         
         // Quoted content (very strong AI indicator)
         if (features.hasQuotedInstructions) {
@@ -560,9 +685,13 @@ class TranscriptAnalyzer {
             aiScore += 1.0;
         }
         
-        // Length-based heuristics (refined)
+        // Enhanced length-based heuristics with stronger student bias for short text
         if (features.wordCount < 3) {
-            aiScore -= 0.6; // Very short responses likely student
+            aiScore -= 1.0; // Very short responses strongly likely student
+        } else if (features.wordCount < 10) {
+            aiScore -= 0.8; // Short responses likely student
+        } else if (features.wordCount < 20) {
+            aiScore -= 0.3; // Medium short responses somewhat likely student
         } else if (features.wordCount > 40) {
             aiScore += 0.4; // Longer explanations more likely AI
         }
@@ -570,6 +699,15 @@ class TranscriptAnalyzer {
         // Content pattern analysis
         if (features.isQuestion && features.wordCount < 15) {
             aiScore -= 0.7; // Short questions more likely from students
+        }
+        
+        // Contextual analysis - check if this follows an AI question (more conservative)
+        if (prevSegment && prevSegment.speaker === 'AI' && 
+            prevSegment.text.includes('?') && 
+            features.wordCount < 20 && 
+            features.hasCasual && 
+            !features.hasInstructional) {
+            aiScore -= 0.6; // Only apply if clearly casual and non-instructional
         }
         
         // Mathematical expressions (context dependent)
@@ -581,31 +719,38 @@ class TranscriptAnalyzer {
             }
         }
         
-        // Uncertainty and casual language (student indicators)
+        // Uncertainty and casual language (stronger student indicators)
         if (features.hasUncertainty) {
-            aiScore -= 0.5;
+            aiScore -= 0.7; // Increased weight for uncertainty
         }
         
         if (features.hasCasual) {
-            aiScore -= 0.6;
+            aiScore -= 0.8; // Increased weight for casual language
         }
         
         // Mathematical calculations (could be student work)
         if (features.hasCalculations && !features.hasInstructional) {
             aiScore -= 0.3;
         }
-
-        // Convert score to probability with higher confidence
-        const aiProbability = 1 / (1 + Math.exp(-1.5 * aiScore));
         
-        if (aiProbability > 0.8) {
+        // Check for informal/incomplete sentences (student indicators)
+        if (!features.hasProperPunctuation && features.wordCount < 50) {
+            aiScore -= 0.6;
+        }
+
+        // Convert score to probability with conservative thresholds
+        const aiProbability = 1 / (1 + Math.exp(-1.5 * aiScore)); // Restored higher multiplier for more decisive classification
+        
+        if (aiProbability > 0.65) { // Lowered threshold for AI classification (more inclusive)
             return { speaker: 'AI', confidence: Math.min(0.9, aiProbability) };
-        } else if (aiProbability < 0.2) {
+        } else if (aiProbability < 0.15) { // Raised threshold for student classification (more conservative)
             return { speaker: 'Student', confidence: Math.min(0.9, 1 - aiProbability) };
         } else {
-            // Reduce Unknown classifications - default to AI for instructional content
-            if (features.wordCount > 20 && (features.hasInstructional || features.hasQuotedInstructions)) {
+            // Enhanced contextual defaults favoring AI for educational content
+            if (features.hasInstructional || features.hasQuotedInstructions || features.wordCount > 20) {
                 return { speaker: 'AI', confidence: 0.75 };
+            } else if (features.wordCount < 10 && (features.hasCasual || features.hasUncertainty)) {
+                return { speaker: 'Student', confidence: 0.7 };
             }
             return { speaker: 'Unknown', confidence: 0.5 };
         }
@@ -642,6 +787,9 @@ class TranscriptAnalyzer {
             // Educational content
             hasExamples: /\b(example|for instance|e\.g\.|such as)\b/i.test(text),
             hasTask: /\b(your task|assignment|exercise|problem|challenge)\b/i.test(text),
+            
+            // Punctuation and formatting analysis
+            hasProperPunctuation: /[.!?]$/.test(text.trim()) || text.includes('"') || text.includes(':'),
             
             avgWordsPerSentence: sentences.length > 0 ? wordCount / sentences.length : 0
         };
