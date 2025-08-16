@@ -237,6 +237,11 @@ class TranscriptAnalyzer {
                 pattern: /^Response:\s*(.*)$/i,
                 confidence: 0.9,
                 captureGroup: 1
+            },
+            {
+                pattern: /^Your [rR]esponse:\s*(.*)$/i,
+                confidence: 0.85,
+                captureGroup: 1
             }
         ];
 
@@ -367,11 +372,16 @@ class TranscriptAnalyzer {
                 if (match) {
                     speaker = 'Student';
                     confidence = studentMarker.confidence;
-                    // Extract the content after the marker, or use the captured group
-                    if (studentMarker.captureGroup && match[studentMarker.captureGroup]) {
-                        cleanText = match[studentMarker.captureGroup].trim();
+                    // For "A:" markers, include the whole line to preserve formatting
+                    if (studentMarker.pattern.toString().includes('A:')) {
+                        cleanText = trimmedLine;
                     } else {
-                        cleanText = trimmedLine.replace(studentMarker.pattern, '').trim();
+                        // Extract the content after the marker for other patterns
+                        if (studentMarker.captureGroup && match[studentMarker.captureGroup]) {
+                            cleanText = match[studentMarker.captureGroup].trim();
+                        } else {
+                            cleanText = trimmedLine.replace(studentMarker.pattern, '').trim();
+                        }
                     }
                     break;
                 }
