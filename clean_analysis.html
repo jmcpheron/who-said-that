@@ -1,0 +1,279 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transcript Analysis Report</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 20px; 
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .summary { 
+            background: white; 
+            padding: 20px; 
+            margin: 20px 0; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .transcript { 
+            background: white;
+            border: 1px solid #e0e0e0; 
+            margin: 15px 0; 
+            padding: 20px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .ai-segment { 
+            background-color: #e3f2fd; 
+            margin: 8px 0; 
+            padding: 12px; 
+            border-radius: 6px; 
+            border-left: 4px solid #1976d2;
+        }
+        .student-segment { 
+            background-color: #f3e5f5; 
+            margin: 8px 0; 
+            padding: 12px; 
+            border-radius: 6px; 
+            border-left: 4px solid #7b1fa2;
+        }
+        .stats { 
+            margin: 15px 0; 
+            font-weight: bold; 
+            color: #555;
+            font-size: 1.1em;
+        }
+        .confidence { 
+            font-size: 0.9em; 
+            color: #666; 
+            font-weight: normal;
+        }
+        table { 
+            border-collapse: collapse; 
+            width: 100%; 
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        th, td { 
+            border: 1px solid #e0e0e0; 
+            padding: 12px; 
+            text-align: left; 
+        }
+        th { 
+            background-color: #f5f5f5; 
+            font-weight: 600;
+            color: #333;
+        }
+        .good { color: #2e7d32; font-weight: bold; }
+        .warning { color: #f57f17; font-weight: bold; }
+        h1, h2, h3 { color: #1976d2; }
+        .high-engagement { background-color: #e8f5e8; }
+        .medium-engagement { background-color: #fff3e0; }
+        .low-engagement { background-color: #ffebee; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Transcript Analysis Report</h1>
+        
+        <div class="summary">
+            <h2>Summary Statistics</h2>
+            <p><strong>Total Transcripts:</strong> 8</p>
+            <p><strong>Average Student Engagement:</strong> 40.2%</p>
+            <p><strong>Range:</strong> 0.0% - 95.2%</p>
+            <p><strong>High Engagement Files (>40%):</strong> 3</p>
+        </div>
+        
+        <h2>Results Table</h2>
+        <table>
+            <tr>
+                <th>Filename</th>
+                <th>Student Ratio</th>
+                <th>Total Words</th>
+                <th>Confidence</th>
+                <th>Quality Status</th>
+                <th>Recommendation</th>
+            </tr>
+
+        <tr class="high-engagement">
+            <td><strong>S06-B4-J8.txt</strong></td>
+            <td><strong>95.2%</strong></td>
+            <td>1,433</td>
+            <td>79.0%</td>
+            <td><span class="good">Good</span></td>
+            <td><strong>High Priority</strong></td>
+        </tr>
+        
+        <tr class="high-engagement">
+            <td><strong>S01-M5-R7.txt</strong></td>
+            <td><strong>86.2%</strong></td>
+            <td>1,472</td>
+            <td>71.2%</td>
+            <td><span class="good">Good</span></td>
+            <td><strong>High Priority</strong></td>
+        </tr>
+        
+        <tr class="high-engagement">
+            <td><strong>S04-H9-X1.txt</strong></td>
+            <td><strong>85.6%</strong></td>
+            <td>2,152</td>
+            <td>71.2%</td>
+            <td><span class="good">Good</span></td>
+            <td><strong>High Priority</strong></td>
+        </tr>
+        
+        <tr class="medium-engagement">
+            <td><strong>S10-R3-Z7.txt</strong></td>
+            <td><strong>28.1%</strong></td>
+            <td>2,294</td>
+            <td>89.6%</td>
+            <td><span class="good">Good</span></td>
+            <td><strong>Medium Priority</strong></td>
+        </tr>
+        
+        <tr class="medium-engagement">
+            <td><strong>S07-C9-M2.txt</strong></td>
+            <td><strong>26.9%</strong></td>
+            <td>1,399</td>
+            <td>89.5%</td>
+            <td><span class="good">Good</span></td>
+            <td><strong>Medium Priority</strong></td>
+        </tr>
+        
+        <tr class="low-engagement">
+            <td><strong>S02-K3-Q9.txt</strong></td>
+            <td><strong>0.0%</strong></td>
+            <td>1,150</td>
+            <td>53.7%</td>
+            <td><span class="warning">Issues: Low confidence, Few segments</span></td>
+            <td><strong>Low Priority</strong></td>
+        </tr>
+        
+        <tr class="low-engagement">
+            <td><strong>S08-P7-L5.txt</strong></td>
+            <td><strong>0.0%</strong></td>
+            <td>2,001</td>
+            <td>75.5%</td>
+            <td><span class="good">Good</span></td>
+            <td><strong>Low Priority</strong></td>
+        </tr>
+        
+        <tr class="low-engagement">
+            <td><strong>S09-E1-K6.txt</strong></td>
+            <td><strong>0.0%</strong></td>
+            <td>2,035</td>
+            <td>57.4%</td>
+            <td><span class="warning">Issues: Low confidence, Few segments</span></td>
+            <td><strong>Low Priority</strong></td>
+        </tr>
+        
+        </table>
+        
+        <h2>Detailed Analysis</h2>
+        <p><em>Click on any transcript below to see the segment-by-segment breakdown with speaker identification.</em></p>
+    
+        <h3>Recommended for Pirie-Kieren Framework Analysis</h3>
+        
+            <div class="transcript high-engagement">
+                <h4>S06-B4-J8.txt</h4>
+                <div class="stats">
+                    Student Words: 95.2% (1,364 words) | 
+                    AI Words: 4.8% (69 words) | 
+                    Confidence: 79.0%
+                </div>
+                <p><strong>Why recommended:</strong> High student engagement with reliable speaker detection</p>
+            
+                <div class="ai-segment">
+                    <strong>AI</strong> (69 words)
+                    <span class="confidence">Confidence: 67.9%</span><br>
+                    === Page 00 ===
+**STEP 1: COSMIC COMEDY ASSESSMENT**
+
+*Astrophysics Humor Specialist Introduction:*
+*"Greetings, earthling! I'm your temporary space-t...
+                </div>
+                
+                <div class="student-segment">
+                    <strong>Student</strong> (1364 words)
+                    <span class="confidence">Confidence: 90.0%</span><br>
+                    oh definitely with puns please
+
+Perfect! You appreciate cosmic comedy mixed with rigorous astrophysics. Prepare for stellar wordplay and universal tru...
+                </div>
+                </div>
+            <div class="transcript high-engagement">
+                <h4>S01-M5-R7.txt</h4>
+                <div class="stats">
+                    Student Words: 86.2% (1,269 words) | 
+                    AI Words: 13.8% (203 words) | 
+                    Confidence: 71.2%
+                </div>
+                <p><strong>Why recommended:</strong> High student engagement with reliable speaker detection</p>
+            
+                <div class="ai-segment">
+                    <strong>AI</strong> (203 words)
+                    <span class="confidence">Confidence: 52.5%</span><br>
+                    === Page 00 ===
+**STEP 1: LEARNING ASSESSMENT**
+
+*Quantum Computing Instructor Introduction:*
+*"Greetings! I'm here to determine your optimal quantum ...
+                </div>
+                
+                <div class="student-segment">
+                    <strong>Student</strong> (1269 words)
+                    <span class="confidence">Confidence: 90.0%</span><br>
+                    abstract mathematical formulations
+
+Excellent. You flourish with mathematical rigor, formal structures, and precise notation—no
+metaphors needed, just...
+                </div>
+                </div>
+            <div class="transcript high-engagement">
+                <h4>S04-H9-X1.txt</h4>
+                <div class="stats">
+                    Student Words: 85.6% (1,843 words) | 
+                    AI Words: 14.4% (309 words) | 
+                    Confidence: 71.2%
+                </div>
+                <p><strong>Why recommended:</strong> High student engagement with reliable speaker detection</p>
+            
+                <div class="ai-segment">
+                    <strong>AI</strong> (309 words)
+                    <span class="confidence">Confidence: 52.5%</span><br>
+                    === Page 00 ===
+Q: DeepMind A: Researcher
+
+Q:
+
+LLM %$# — AE: GENOM XSTR
+
+AT R#R RTRRSA: **
+
+UOS! YNM#BTLMT AI RYRTS. XYFHBTRY ZRI, F#RT L #slee ele, L...
+                </div>
+                
+                <div class="student-segment">
+                    <strong>Student</strong> (1843 words)
+                    <span class="confidence">Confidence: 90.0%</span><br>
+                    Ys 2 (nsy sM RO
+Q:
+
+FR#T! R#RY Tsi, ZsMNRO |O, #LIOO R#N RYY, Tits
+OPR Ris, DTIRG. L#TYR YR#RIYR, PRYT, INR Roo)
+(Mi RYMYO, (ROLO YW) :
+
+Rt OYROINI#Y:...
+                </div>
+                </div>
+        </div>
+    </body>
+    </html>
+    

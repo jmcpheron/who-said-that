@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Who Said That? - Interactive Transcript Analyzer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>
+                    <span class="icon">🗣️</span>
+                    Who Said That?
+                </h1>
+                <p class="subtitle">Interactive AI-Student Transcript Analyzer</p>
+            </div>
+            <div class="header-actions">
+                <button id="demo-btn" class="btn btn-outline">Load Demo</button>
+                <button id="export-btn" class="btn btn-primary" disabled>Export Analysis</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Upload Section -->
+            <section id="upload-section" class="upload-section">
+                <div class="upload-area" id="upload-area">
+                    <div class="upload-content">
+                        <div class="upload-icon">📁</div>
+                        <h3>Drop transcript files here</h3>
+                        <p>Or click to browse (.txt files supported)</p>
+                        <input type="file" id="file-input" accept=".txt" multiple hidden>
+                        <button id="browse-btn" class="btn btn-primary">Browse Files</button>
+                    </div>
+                </div>
+                <div class="upload-progress" id="upload-progress" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <span class="progress-text" id="progress-text">Processing files...</span>
+                </div>
+            </section>
+
+            <!-- Dashboard -->
+            <section id="dashboard" class="dashboard" style="display: none;">
+                <!-- Summary Cards -->
+                <div class="summary-cards">
+                    <div class="card">
+                        <div class="card-icon">📊</div>
+                        <div class="card-content">
+                            <h3 id="total-files">0</h3>
+                            <p>Files Analyzed</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">💬</div>
+                        <div class="card-content">
+                            <h3 id="avg-engagement">0%</h3>
+                            <p>Avg Student Engagement</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">📝</div>
+                        <div class="card-content">
+                            <h3 id="total-words">0</h3>
+                            <p>Total Words</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🎯</div>
+                        <div class="card-content">
+                            <h3 id="avg-confidence">0%</h3>
+                            <p>Avg Confidence</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🔍</div>
+                        <div class="card-content">
+                            <h3 id="avg-coverage">100%</h3>
+                            <p>Avg Coverage</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="controls">
+                    <div class="filter-group">
+                        <label for="engagement-filter">Min Student Engagement:</label>
+                        <input type="range" id="engagement-filter" min="0" max="100" value="0" class="slider">
+                        <span id="engagement-value">0%</span>
+                    </div>
+                    <div class="filter-group">
+                        <label for="confidence-filter">Min Confidence:</label>
+                        <input type="range" id="confidence-filter" min="0" max="100" value="0" class="slider">
+                        <span id="confidence-value">0%</span>
+                    </div>
+                    <div class="filter-group">
+                        <label for="speaker-filter">Show Speakers:</label>
+                        <select id="speaker-filter" class="filter-select">
+                            <option value="all">All Speakers</option>
+                            <option value="ai">AI Only</option>
+                            <option value="student">Student Only</option>
+                            <option value="unknown">Unknown Only</option>
+                        </select>
+                    </div>
+                    <div class="search-group">
+                        <input type="text" id="search-input" placeholder="Search transcripts..." class="search-input">
+                        <button id="clear-search" class="btn btn-secondary">Clear</button>
+                    </div>
+                </div>
+
+                <!-- Visualizations -->
+                <div class="visualizations">
+                    <div class="chart-container">
+                        <h3>Student Engagement Distribution</h3>
+                        <canvas id="engagement-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Confidence vs Engagement</h3>
+                        <canvas id="scatter-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Confidence Score Distribution</h3>
+                        <canvas id="confidence-dist-chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- File List -->
+                <div class="file-list-container">
+                    <div class="file-list-header">
+                        <h3>Transcript Analysis Results</h3>
+                        <div class="sort-controls">
+                            <select id="sort-select">
+                                <option value="filename">Sort by Filename</option>
+                                <option value="engagement">Sort by Engagement</option>
+                                <option value="confidence">Sort by Confidence</option>
+                                <option value="words">Sort by Word Count</option>
+                            </select>
+                            <button id="sort-order" class="btn btn-secondary">↓</button>
+                        </div>
+                    </div>
+                    <div class="file-list" id="file-list">
+                        <!-- File cards will be inserted here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Detailed View Modal -->
+            <div id="detail-modal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 id="modal-title">Transcript Details</h2>
+                        <button id="close-modal" class="close-btn">&times;</button>
+                    </div>
+                    <div class="modal-body" id="modal-body">
+                        <!-- Detailed content will be inserted here -->
+                    </div>
+                    <div class="modal-footer">
+                        <button id="export-current" class="btn btn-primary">Export This Analysis</button>
+                        <button id="close-modal-btn" class="btn btn-secondary">Close</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 Who Said That? - Interactive Transcript Analyzer | 
+               <a href="https://github.com/your-username/who-said-that" target="_blank">GitHub</a>
+            </p>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Analyzing transcripts...</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

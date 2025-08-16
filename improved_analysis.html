@@ -1,0 +1,1273 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Student Transcript Analysis</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }
+        .summary { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .transcript { background: white; margin: 20px 0; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .stats { margin-bottom: 15px; }
+        .stat { display: inline-block; margin-right: 20px; padding: 5px 10px; border-radius: 4px; font-weight: bold; }
+        .ai-stat { background-color: #e3f2fd; color: #1976d2; }
+        .student-stat { background-color: #f3e5f5; color: #7b1fa2; }
+        .total-stat { background-color: #e8f5e8; color: #388e3c; }
+        .segment { margin: 10px 0; padding: 10px; border-radius: 4px; border-left: 4px solid; }
+        .ai-segment { background-color: #e3f2fd; border-left-color: #1976d2; }
+        .student-segment { background-color: #f3e5f5; border-left-color: #7b1fa2; }
+        .low-confidence { opacity: 0.7; border-style: dashed; }
+        .segment-label { font-weight: bold; font-size: 0.9em; margin-bottom: 5px; }
+        .segment-text { font-size: 0.85em; line-height: 1.4; }
+        .navigation { position: fixed; top: 20px; right: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 200px; }
+        .nav-item { display: block; padding: 5px; text-decoration: none; color: #333; border-radius: 3px; margin: 2px 0; }
+        .nav-item:hover { background-color: #f0f0f0; }
+        h1, h2 { color: #333; }
+        .filter-controls { margin: 15px 0; }
+        .filter-btn { padding: 8px 16px; margin: 5px; border: none; border-radius: 4px; cursor: pointer; background-color: #ddd; }
+        .filter-btn.active { background-color: #1976d2; color: white; }
+    </style>
+    <script>
+        function showAll() {
+            document.querySelectorAll('.transcript').forEach(t => t.style.display = 'block');
+            setActiveFilter('all');
+        }
+        function showHighEngagement() {
+            document.querySelectorAll('.transcript').forEach(t => {
+                const studentRatio = parseFloat(t.querySelector('.student-stat').textContent.match(/(\d+\.\d+)%/)[1]) / 100;
+                t.style.display = studentRatio > 0.3 ? 'block' : 'none';
+            });
+            setActiveFilter('high');
+        }
+        function showLowEngagement() {
+            document.querySelectorAll('.transcript').forEach(t => {
+                const studentRatio = parseFloat(t.querySelector('.student-stat').textContent.match(/(\d+\.\d+)%/)[1]) / 100;
+                t.style.display = studentRatio <= 0.3 ? 'block' : 'none';
+            });
+            setActiveFilter('low');
+        }
+        function setActiveFilter(filter) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[onclick*="${filter}"]`).classList.add('active');
+        }
+        window.onload = () => setActiveFilter('all');
+    </script>
+</head>
+<body>
+    <h1>AI-Student Transcript Analysis</h1>
+    
+    <div class="summary">
+        <h2>Summary Statistics</h2>
+        <p><strong>Total Transcripts:</strong> 8</p>
+        <p><strong>Average Student Engagement:</strong> 40.3%</p>
+        <p><strong>Analysis Method:</strong> Pattern-based speaker identification with confidence scoring</p>
+        
+        <div class="filter-controls">
+            <button class="filter-btn active" onclick="showAll()">Show All</button>
+            <button class="filter-btn" onclick="showHighEngagement()">High Engagement (>30%)</button>
+            <button class="filter-btn" onclick="showLowEngagement()">Low Engagement (≤30%)</button>
+        </div>
+    </div>
+    
+    <div class="navigation">
+        <h3>Transcripts</h3>
+        <a href="#S06-B4-J8.txt" class="nav-item">S06-B4-J8.txt (95.2%)</a>
+<a href="#S04-H9-X1.txt" class="nav-item">S04-H9-X1.txt (86.4%)</a>
+<a href="#S01-M5-R7.txt" class="nav-item">S01-M5-R7.txt (86.3%)</a>
+<a href="#S10-R3-Z7.txt" class="nav-item">S10-R3-Z7.txt (28.1%)</a>
+<a href="#S07-C9-M2.txt" class="nav-item">S07-C9-M2.txt (26.8%)</a>
+<a href="#S02-K3-Q9.txt" class="nav-item">S02-K3-Q9.txt (0.0%)</a>
+<a href="#S08-P7-L5.txt" class="nav-item">S08-P7-L5.txt (0.0%)</a>
+<a href="#S09-E1-K6.txt" class="nav-item">S09-E1-K6.txt (0.0%)</a>
+
+    </div>
+
+        <div class="transcript" id="S06-B4-J8.txt">
+            <h2>S06-B4-J8.txt</h2>
+            <div class="stats">
+                <span class="stat ai-stat">AI: 69 words (4.8%)</span>
+                <span class="stat student-stat">Student: 1364 words (95.2%)</span>
+                <span class="stat total-stat">Total: 1433 words</span>
+            </div>
+            <div class="content">
+        
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 69">
+                    <div class="segment-label">AI (69 words)</div>
+                    <div class="segment-text">=== Page 00 ===
+**STEP 1: COSMIC COMEDY ASSESSMENT**
+
+*Astrophysics Humor Specialist Introduction:*
+*"Greetings, earthling! I'm your temporary space-time comedy calibrator. My mission: determine wheth...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 1364">
+                    <div class="segment-label">Student (1364 words)</div>
+                    <div class="segment-text">oh definitely with puns please
+
+Perfect! You appreciate cosmic comedy mixed with rigorous astrophysics. Prepare for stellar wordplay and universal truths.
+
+**Second Question:**
+*"If a neutron star wal...</div>
+                </div>
+            
+            </div>
+        </div>
+        
+        <div class="transcript" id="S04-H9-X1.txt">
+            <h2>S04-H9-X1.txt</h2>
+            <div class="stats">
+                <span class="stat ai-stat">AI: 256 words (13.6%)</span>
+                <span class="stat student-stat">Student: 1630 words (86.4%)</span>
+                <span class="stat total-stat">Total: 1886 words</span>
+            </div>
+            <div class="content">
+        
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 256">
+                    <div class="segment-label">AI (256 words)</div>
+                    <div class="segment-text">=== Page 00 ===
+Q: DeepMind A: Researcher
+
+Q:
+
+LLM %$# — AE: GENOM XSTR
+
+AT R#R RTRRSA: **
+
+UOS! YNM#BTLMT AI RYRTS. XYFHBTRY ZRI, F#RT L #slee ele, LAM
+XRYA TY#AS US. KM Rie] #olti RS, AY Yy TR,
+
+Wy
+...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 1630">
+                    <div class="segment-label">Student (1630 words)</div>
+                    <div class="segment-text">Ys 2 (nsy sM RO
+Q:
+
+FR#T! R#RY Tsi, ZsMNRO |O, #LIOO R#N RYY, Tits
+OPR Ris, DTIRG. L#TYR YR#RIYR, PRYT, INR Roo)
+(Mi RYMYO, (ROLO YW) :
+
+Rt OYROINI#Y: Ry) O #TU#VYOY *
+MYO: TRI Msm, UYO) OT OlY— #TR R...</div>
+                </div>
+            
+            </div>
+        </div>
+        
+        <div class="transcript" id="S01-M5-R7.txt">
+            <h2>S01-M5-R7.txt</h2>
+            <div class="stats">
+                <span class="stat ai-stat">AI: 203 words (13.7%)</span>
+                <span class="stat student-stat">Student: 1274 words (86.3%)</span>
+                <span class="stat total-stat">Total: 1477 words</span>
+            </div>
+            <div class="content">
+        
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 203">
+                    <div class="segment-label">AI (203 words)</div>
+                    <div class="segment-text">=== Page 00 ===
+**STEP 1: LEARNING ASSESSMENT**
+
+*Quantum Computing Instructor Introduction:*
+*"Greetings! I'm here to determine your optimal quantum learning pathway. I'll pose several focused
+questi...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 1274">
+                    <div class="segment-label">Student (1274 words)</div>
+                    <div class="segment-text">abstract mathematical formulations
+
+Excellent. You flourish with mathematical rigor, formal structures, and precise notation—no
+metaphors needed, just focused quantum mechanics. Let's commence.
+
+### *...</div>
+                </div>
+            
+            </div>
+        </div>
+        
+        <div class="transcript" id="S10-R3-Z7.txt">
+            <h2>S10-R3-Z7.txt</h2>
+            <div class="stats">
+                <span class="stat ai-stat">AI: 1650 words (71.9%)</span>
+                <span class="stat student-stat">Student: 644 words (28.1%)</span>
+                <span class="stat total-stat">Total: 2294 words</span>
+            </div>
+            <div class="content">
+        
+                <div class="segment ai-segment low-confidence" 
+                     title="Speaker: AI, Confidence: 0.70, Words: 9">
+                    <div class="segment-label">AI (9 words)</div>
+                    <div class="segment-text">=== Page 00 ===
+**INTERDIMENSIONAL LINGUISTICS: WHEN GRAMMAR RULES MEET QUANTUM MECHANICS**
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 40">
+                    <div class="segment-label">AI (40 words)</div>
+                    <div class="segment-text">*"Welcome to Advanced Theoretical Grammar, where we explore what happens when language meets physics! I'm Professor Verbatim, and today we're examining why the subjunctive mood might actually exist in...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 18">
+                    <div class="segment-label">Student (18 words)</div>
+                    <div class="segment-text">*"Wait, are you saying grammar rules exist in multiple states simultaneously? That would explain so much about English!"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 35">
+                    <div class="segment-label">AI (35 words)</div>
+                    <div class="segment-text">*"Precisely! Consider the sentence 'If I were you...' The verb 'were' exists in subjunctive mood, expressing a hypothetical state. But in quantum linguistics, this sentence exists in superposition unt...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 23">
+                    <div class="segment-label">Student (23 words)</div>
+                    <div class="segment-text">*"So when someone says 'If I was you' instead of 'If I were you,' they're actually collapsing the subjunctive wave function incorrectly?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 47">
+                    <div class="segment-label">AI (47 words)</div>
+                    <div class="segment-text">*"Now you're thinking like a quantum grammarian! But here's where it gets interesting—prescriptive vs. descriptive grammar creates a linguistic uncertainty principle. The more precisely we try to pin ...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 27">
+                    <div class="segment-label">Student (27 words)</div>
+                    <div class="segment-text">*"Oh no, I think I understand. You can't simultaneously know both how a word 'should' be used and how it's actually being used by speakers?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 37">
+                    <div class="segment-label">AI (37 words)</div>
+                    <div class="segment-text">*"Exactly! Observe: the word 'literally.' In quantum superposition, it means both 'actually' AND 'figuratively' until contextual measurement collapses it into one state. Prescriptivists measuring it f...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 22">
+                    <div class="segment-label">Student (22 words)</div>
+                    <div class="segment-text">*"This is hurting my brain in the best possible way. What about split infinitives? Please tell me those have quantum properties too."*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 98">
+                    <div class="segment-label">AI (98 words)</div>
+                    <div class="segment-text">*"Ah! Split infinitives exist in parallel universes! In Universe A: 'To boldly go' is incorrect. In Universe B: it's perfectly fine. We happen to live in a universe where both states coexist, creating...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 17">
+                    <div class="segment-label">Student (17 words)</div>
+                    <div class="segment-text">*"So those grammar mistakes I see online are actually evidence of quantum decoherence in the language field?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 38">
+                    <div class="segment-label">AI (38 words)</div>
+                    <div class="segment-text">*"You've discovered linguistic quantum mechanics! Each typo is a measurement error in the grammar wave function. 'Your' and 'you're' are entangled particles—change one inappropriately and it instantly...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 11">
+                    <div class="segment-label">Student (11 words)</div>
+                    <div class="segment-text">*"Wait, does this mean autocorrect is actually a quantum grammar detector?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 40">
+                    <div class="segment-label">AI (40 words)</div>
+                    <div class="segment-text">*"Autocorrect is humanity's first attempt at building a grammar particle accelerator! It smashes words together at high speeds to see what linguistic particles emerge. Sometimes you get 'duck' instead...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 11">
+                    <div class="segment-label">Student (11 words)</div>
+                    <div class="segment-text">*"Professor, I need to know about semicolons. They confuse me existentially."*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 42">
+                    <div class="segment-label">AI (42 words)</div>
+                    <div class="segment-text">*"Ah, semicolons! They exist in the liminal space between sentences; they're neither fully connected nor completely separate. In quantum punctuation theory, a semicolon represents a partial measuremen...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 15">
+                    <div class="segment-label">Student (15 words)</div>
+                    <div class="segment-text">*"So people who overuse semicolons are just refusing to collapse their thoughts into definite states?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 34">
+                    <div class="segment-label">AI (34 words)</div>
+                    <div class="segment-text">*"Precisely! They're linguistic quantum mechanics enthusiasts, maintaining superposition for as long as possible. Meanwhile, people who only use periods are classical grammarians—they prefer their tho...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 13">
+                    <div class="segment-label">Student (13 words)</div>
+                    <div class="segment-text">*"Okay, I have to ask about the Oxford comma. Is that quantum too?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 46">
+                    <div class="segment-label">AI (46 words)</div>
+                    <div class="segment-text">*"The Oxford comma is perhaps the most famous example of grammatical quantum entanglement! Consider: 'I love my parents, Lady Gaga and Humpty Dumpty.' Without the Oxford comma, Lady Gaga and Humpty Du...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 14">
+                    <div class="segment-label">Student (14 words)</div>
+                    <div class="segment-text">*"So the comma literally changes the family relationships in the sentence? That's terrifying!"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 75">
+                    <div class="segment-label">AI (75 words)</div>
+                    <div class="segment-text">*"Indeed! The comma creates or destroys quantum grammatical relationships. This is why style guides from different institutions give contradictory advice—they're measuring the same linguistic phenomen...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 9">
+                    <div class="segment-label">Student (9 words)</div>
+                    <div class="segment-text">*"So political speech is literally quantum superposition of meaning?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 42">
+                    <div class="segment-label">AI (42 words)</div>
+                    <div class="segment-text">*"Exactly! And campaign promises exist in a state where they're both sincere and strategic until the election results provide enough energy to collapse them into reality. This is why politicians speak...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 20">
+                    <div class="segment-label">Student (20 words)</div>
+                    <div class="segment-text">*"This explains everything about political discourse! But what about poetry? How does quantum mechanics affect metaphors?"*
+
+**METAPHORICAL WAVE-PARTICLE DUALITY**
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 41">
+                    <div class="segment-label">AI (41 words)</div>
+                    <div class="segment-text">*"Metaphors exhibit wave-particle duality! Observe: 'Love is a battlefield.' As a wave, it spreads meaning across multiple interpretations. As a particle, it's a specific comparison between two concep...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 16">
+                    <div class="segment-label">Student (16 words)</div>
+                    <div class="segment-text">*"So when someone doesn't 'get' a metaphor, they're actually making the wrong quantum measurement?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 38">
+                    <div class="segment-label">AI (38 words)</div>
+                    <div class="segment-text">*"Precisely! And mixed metaphors occur when two metaphorical wave functions interfere with each other destructively. 'We'll burn that bridge when we come to it' creates linguistic interference pattern...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 15">
+                    <div class="segment-label">Student (15 words)</div>
+                    <div class="segment-text">*"Professor, how does translation work in quantum linguistics? Surely meaning changes when moving between languages?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 31">
+                    <div class="segment-label">AI (31 words)</div>
+                    <div class="segment-text">*"Ah! Translation is literally interdimensional travel! Each language exists in its own linguistic dimension with unique grammar particles and meaning fields. Translators are dimensional engineers who...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 16">
+                    <div class="segment-label">Student (16 words)</div>
+                    <div class="segment-text">*"That's why some things are 'lost in translation'—they only exist in specific linguistic dimensions!"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 46">
+                    <div class="segment-label">AI (46 words)</div>
+                    <div class="segment-text">*"Exactly! The German word 'schadenfreude' can't fully exist in English-dimensional space, so we had to import it directly, like borrowing matter from a parallel universe. This is why borrowed words o...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 20">
+                    <div class="segment-label">Student (20 words)</div>
+                    <div class="segment-text">*"I'm starting to see language completely differently. But how do we deal with the uncertainty principle in practical communication?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 40">
+                    <div class="segment-label">AI (40 words)</div>
+                    <div class="segment-text">*"Excellent question! Consider texting. The more precisely you try to convey tone through punctuation and emojis, the more you disturb the natural flow of meaning. Too many exclamation points collapse...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 17">
+                    <div class="segment-label">Student (17 words)</div>
+                    <div class="segment-text">*"So that's why 'k' feels passive-aggressive but 'okay' feels normal? Different quantum states of agreement?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 27">
+                    <div class="segment-label">AI (27 words)</div>
+                    <div class="segment-text">*"Precisely! Single letters have higher energy states and create more linguistic turbulence. Full words exist in stable quantum states with predictable meaning distributions."*
+
+**EMOJI AS QUANTUM PAR...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 8">
+                    <div class="segment-label">Student (8 words)</div>
+                    <div class="segment-text">*"What about emojis? Are they like... linguistic bosons?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 43">
+                    <div class="segment-label">AI (43 words)</div>
+                    <div class="segment-text">*"Brilliant insight! Emojis are indeed force-carrying particles that mediate emotional interactions! The 😂 emoji carries the strong humor force, while 🙄 mediates the weak sarcasm interaction. And don'...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 15">
+                    <div class="segment-label">Student (15 words)</div>
+                    <div class="segment-text">*"And the winky face 😉 exists in superposition between flirting and joking until context collapses it?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 27">
+                    <div class="segment-label">AI (27 words)</div>
+                    <div class="segment-text">*"Now you're thinking like a quantum communications theorist! The winky face is Schrödinger's emoji—simultaneously playful and suggestive until observed by the recipient!"*
+
+**GENERATIONAL LANGUAGE EV...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 13">
+                    <div class="segment-label">Student (13 words)</div>
+                    <div class="segment-text">*"Professor, why do different generations speak so differently? Is that quantum linguistics too?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 38">
+                    <div class="segment-label">AI (38 words)</div>
+                    <div class="segment-text">*"Absolutely! Each generation exists in its own linguistic timeline. When Gen Z says 'that's fire' and Boomers hear 'that's dangerous,' we're observing temporal linguistic drift. The same sound waves ...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 7">
+                    <div class="segment-label">Student (7 words)</div>
+                    <div class="segment-text">*"So slang is like... linguistic time travel?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 42">
+                    <div class="segment-label">AI (42 words)</div>
+                    <div class="segment-text">*"Exactly! Slang creates wormholes in meaning-space that connect to different temporal linguistic states. When someone says 'that's sick' meaning 'that's cool,' they're accessing a meaning state from ...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 13">
+                    <div class="segment-label">Student (13 words)</div>
+                    <div class="segment-text">*"What about grammar police? Are they affecting the quantum system by observing it?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 31">
+                    <div class="segment-label">AI (31 words)</div>
+                    <div class="segment-text">*"Grammar police are indeed quantum observers! But here's the problem—their measurements are based on classical grammar mechanics. They're trying to apply Newtonian linguistic rules to quantum languag...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 15">
+                    <div class="segment-label">Student (15 words)</div>
+                    <div class="segment-text">*"So when they correct someone's grammar, they're actually changing the language through observation?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 45">
+                    <div class="segment-label">AI (45 words)</div>
+                    <div class="segment-text">*"Precisely! But since language is a living quantum system, it immediately evolves to work around their measurements. This is why 'ain't' keeps surviving despite centuries of grammatical persecution—i...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 15">
+                    <div class="segment-label">Student (15 words)</div>
+                    <div class="segment-text">*"This might be crazy, but are memes like... linguistic viruses that spread through quantum tunneling?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 40">
+                    <div class="segment-label">AI (40 words)</div>
+                    <div class="segment-text">*"That's not crazy—that's revolutionary! Memes are indeed linguistic viruses that tunnel through meaning barriers! 'All your base are belong to us' infected English with intentionally incorrect gramma...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 16">
+                    <div class="segment-label">Student (16 words)</div>
+                    <div class="segment-text">*"And they evolve! Like 'doge' speak with 'much wow, very amaze' created its own grammar rules!"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 54">
+                    <div class="segment-label">AI (54 words)</div>
+                    <div class="segment-text">*"Exactly! Memes create temporary linguistic universes with their own internal grammar logic. They're like linguistic laboratory experiments in accelerated evolution!"*
+
+**THE FINAL QUANTUM GRAMMAR EX...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 20">
+                    <div class="segment-label">Student (20 words)</div>
+                    <div class="segment-text">*"Um... 'The data shows that these phenomena proves language are weird?' That's like... multiple quantum grammar states at once?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 33">
+                    <div class="segment-label">AI (33 words)</div>
+                    <div class="segment-text">*"PERFECT! You've created grammatical chaos! 'Data' could be singular or plural, 'shows' vs 'proves' creates verb agreement superposition, and 'language are' exists in impossible but understandable st...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 11">
+                    <div class="segment-label">Student (11 words)</div>
+                    <div class="segment-text">*"I... I don't know whether to be proud or horrified."*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 46">
+                    <div class="segment-label">AI (46 words)</div>
+                    <div class="segment-text">*"Embrace the uncertainty! That's the essence of quantum linguistics!"*
+
+=== Page 05 ===
+**GRADUATION FROM QUANTUM GRAMMAR SCHOOL**
+
+Prof. Verbatim: *"Congratulations! You've successfully learned to t...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 23">
+                    <div class="segment-label">Student (23 words)</div>
+                    <div class="segment-text">*"So what you're saying is... every conversation is like a linguistic experiment where we're constantly measuring and changing reality through observation?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 32">
+                    <div class="segment-label">AI (32 words)</div>
+                    <div class="segment-text">*"Exactly! And now you understand why miscommunication is so common—we're all quantum grammar mechanics working with incomplete measurement tools, trying to collapse meaning states that exist in diffe...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 18">
+                    <div class="segment-label">Student (18 words)</div>
+                    <div class="segment-text">*"This explains why 'Let's eat Grandma' and 'Let's eat, Grandma' are in completely different quantum states!"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 30">
+                    <div class="segment-label">AI (30 words)</div>
+                    <div class="segment-text">*"The comma is a quantum punctuation accelerator that prevents the collapse of Grandma into a edible state! Punctuation literally saves lives by maintaining proper grammatical superposition!"*
+
+**THE ...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 23">
+                    <div class="segment-label">Student (23 words)</div>
+                    <div class="segment-text">*"Professor, if every possible sentence exists somewhere in the linguistic multiverse, does that mean everything that can be said will eventually be said?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 34">
+                    <div class="segment-label">AI (34 words)</div>
+                    <div class="segment-text">*"According to the Many-Worlds Interpretation of Grammar, yes! Somewhere in the infinite multiverse, someone is having this exact conversation but with perfect grammar. In another universe, we're comm...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 10">
+                    <div class="segment-label">Student (10 words)</div>
+                    <div class="segment-text">*"And in another universe, grammar doesn't exist at all?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 31">
+                    <div class="segment-label">AI (31 words)</div>
+                    <div class="segment-text">*"Indeed! There's a universe where meaning transfers directly through quantum entanglement without the need for words, grammar, or even language as we know it. Communication happens instantly through ...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 8">
+                    <div class="segment-label">Student (8 words)</div>
+                    <div class="segment-text">*"That sounds amazing! How do we get there?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 67">
+                    <div class="segment-label">AI (67 words)</div>
+                    <div class="segment-text">*"We can't! We're quantum-locked into this linguistic dimension. But we can appreciate the elegant complexity of our grammar-dependent universe while we're here!"*
+
+**FINAL QUANTUM WISDOM**
+
+Prof. Ver...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 23">
+                    <div class="segment-label">Student (23 words)</div>
+                    <div class="segment-text">*"So when someone uses 'literally' to mean 'figuratively,' they're not wrong—they're just accessing a different quantum state of the word?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 26">
+                    <div class="segment-label">AI (26 words)</div>
+                    <div class="segment-text">*"Exactly! And when you understand someone despite their 'incorrect' grammar, you've successfully performed quantum linguistic entanglement. You've synchronized your meaning states across grammatical ...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 26">
+                    <div class="segment-label">Student (26 words)</div>
+                    <div class="segment-text">*"This has been the most confusing and enlightening class ever. I feel like I understand language and am completely confused by it at the same time."*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 32">
+                    <div class="segment-label">AI (32 words)</div>
+                    <div class="segment-text">*"Perfect! You've achieved linguistic superposition—the state of understanding and confusion existing simultaneously. That's the mark of a true quantum grammarian!"*
+
+=== Page 06 ===
+**POST-CREDITS: T...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 12">
+                    <div class="segment-label">Student (12 words)</div>
+                    <div class="segment-text">*"Professor! I've been experimenting with quantum punctuation in my daily texts!"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 5">
+                    <div class="segment-label">AI (5 words)</div>
+                    <div class="segment-text">*"Excellent! What have you discovered?"*
+</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 30">
+                    <div class="segment-label">Student (30 words)</div>
+                    <div class="segment-text">*"When I use ellipses... people assume I'm thinking. When I use em dashes—they think I'm being dramatic. But when I use interrobangs‽ nobody knows what to think!"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 25">
+                    <div class="segment-label">AI (25 words)</div>
+                    <div class="segment-text">*"You've discovered rare punctuation particles! The interrobang exists in such a high energy state that most people's grammar detectors can't measure it!"*
+</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 23">
+                    <div class="segment-label">Student (23 words)</div>
+                    <div class="segment-text">*"I'm also working on a theory about how autocorrect creates parallel linguistic universes every time it changes what we meant to type."*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 17">
+                    <div class="segment-label">AI (17 words)</div>
+                    <div class="segment-text">*"Publish that! It could revolutionize our understanding of technological interference in quantum communication!"*
+
+**THE ETERNAL GRAMMAR MYSTERY**
+</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 16">
+                    <div class="segment-label">Student (16 words)</div>
+                    <div class="segment-text">*"Professor, one last question: if everything is quantum linguistics, what determines which grammatical rules become 'standard'?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 41">
+                    <div class="segment-label">AI (41 words)</div>
+                    <div class="segment-text">*"Ah, the eternal mystery! Standard grammar emerges through linguistic natural selection—the rules that facilitate successful communication survive, while those that create confusion collapse into obs...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 9">
+                    <div class="segment-label">Student (9 words)</div>
+                    <div class="segment-text">*"So somewhere, Shakespeare's English is still the standard?"*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 20">
+                    <div class="segment-label">AI (20 words)</div>
+                    <div class="segment-text">*"Indeed! And somewhere else, txtspk became the formal academic language. The multiverse contains all possible evolutionary paths of human communication!"*
+</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 6">
+                    <div class="segment-label">Student (6 words)</div>
+                    <div class="segment-text">*"That's both comforting and terrifying."*
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 85">
+                    <div class="segment-label">AI (85 words)</div>
+                    <div class="segment-text">*"Welcome to quantum linguistics—where every answer creates new questions, and every question exists in superposition until observed by a curious mind!"*
+
+**[END OF QUANTUM GRAMMAR SEMESTER]**
+
+*No gr...</div>
+                </div>
+            
+            </div>
+        </div>
+        
+        <div class="transcript" id="S07-C9-M2.txt">
+            <h2>S07-C9-M2.txt</h2>
+            <div class="stats">
+                <span class="stat ai-stat">AI: 1026 words (73.2%)</span>
+                <span class="stat student-stat">Student: 376 words (26.8%)</span>
+                <span class="stat total-stat">Total: 1402 words</span>
+            </div>
+            <div class="content">
+        
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 34">
+                    <div class="segment-label">AI (34 words)</div>
+                    <div class="segment-text">=== Page 00 ===
+**CULINARY CHEMISTRY CHAOS ASSESSMENT**
+
+Molecular Gastronomy Assistant: *"Bonjour! I am Claude's cousin, Claud-ius, your culinary chemistry companion! Today we transform kitchen disas...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 15">
+                    <div class="segment-label">Student (15 words)</div>
+                    <div class="segment-text">Claude has a cousin? This is already getting weird. But yes, let's do this!
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 34">
+                    <div class="segment-label">AI (34 words)</div>
+                    <div class="segment-text">*"Oui! Claude handles boring topics like economics. I handle the REALLY important science—why soufflés collapse and how to make edible slime! First question: Do you prefer your chemical reactions expl...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 14">
+                    <div class="segment-label">Student (14 words)</div>
+                    <div class="segment-text">Definitely mildly terrifying. I like my eyebrows where they are.
+
+**STEP 1: KITCHEN LABORATORY SETUP**
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 33">
+                    <div class="segment-label">AI (33 words)</div>
+                    <div class="segment-text">*"Excellent choice! Today we study the Maillard reaction—when proteins and sugars have a passionate chemical romance that creates delicious brown colors and flavors. It's like chemistry dating, but wi...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 9">
+                    <div class="segment-label">Student (9 words)</div>
+                    <div class="segment-text">Wait, so cooking is just chemistry with edible results?
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 39">
+                    <div class="segment-label">AI (39 words)</div>
+                    <div class="segment-text">*"Exactement! Every recipe is a chemical equation in disguise. For example:*
+*Sugar + Heat + Time → Caramel + Smoke Alarm + Confused Neighbors*
+
+*The Maillard reaction occurs at temperatures above 140...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 20">
+                    <div class="segment-label">Student (20 words)</div>
+                    <div class="segment-text">So that's why my cookies always look anemic! I've been under-reacting them!
+
+=== Page 01 ===
+**THE GREAT BROWNING EXPERIMENT**
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 32">
+                    <div class="segment-label">AI (32 words)</div>
+                    <div class="segment-text">*"Precisely! But here's where it gets interesting—and by interesting, I mean 'potentially disastrous.' The Maillard reaction produces over 600 different flavor compounds. That's more chemical complexi...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 9">
+                    <div class="segment-label">Student (9 words)</div>
+                    <div class="segment-text">600 compounds? From just sugar and protein? That seems impossible!
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 56">
+                    <div class="segment-label">AI (56 words)</div>
+                    <div class="segment-text">*"Ah, but you forget—amino acids are like LEGO blocks, but for molecules! There are 20 standard amino acids, and when they react with reducing sugars, they create a beautiful symphony of:*
+
+*- Aldehyd...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 21">
+                    <div class="segment-label">Student (21 words)</div>
+                    <div class="segment-text">Okay, but why do my onions make me cry? Is that also chemistry trying to ruin my life?
+
+**TEARFUL CHEMISTRY LESSON**
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 57">
+                    <div class="segment-label">AI (57 words)</div>
+                    <div class="segment-text">*"Ah, the eternal struggle! Onions contain sulfur compounds that are basically tiny chemical weapons. When you cut an onion, you break cell walls and release:*
+
+*Alliin + Alliinase → Allicin + Magic T...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 17">
+                    <div class="segment-label">Student (17 words)</div>
+                    <div class="segment-text">WHAT?! My eyes are being dissolved and you're acting like it's no big deal?!
+
+=== Page 02 ===</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 37">
+                    <div class="segment-label">AI (37 words)</div>
+                    <div class="segment-text">*"Only mildly! It's very polite sulfuric acid. But here's the beautiful part—this same chemical warfare creates flavor! The sulfur compounds are what make onions taste like onions instead of... I don'...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 14">
+                    <div class="segment-label">Student (14 words)</div>
+                    <div class="segment-text">So onions are basically edible chemical weapons that we voluntarily put in our food?
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 24">
+                    <div class="segment-label">AI (24 words)</div>
+                    <div class="segment-text">*"Oui! Humans are the only species that intentionally inflicts chemical damage for flavor enhancement. We are either very brave or very stupid. Possibly both!"*
+</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 20">
+                    <div class="segment-label">Student (20 words)</div>
+                    <div class="segment-text">This explains so much about humanity. What about bread? Please tell me bread is safe.
+
+**YEAST: THE TINY ALCOHOLIC CHEMISTS**
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 43">
+                    <div class="segment-label">AI (43 words)</div>
+                    <div class="segment-text">*"Ah, bread! Where tiny yeast organisms get drunk and produce carbon dioxide as a waste product, which we trap to make fluffy carbohydrates. The equation is:*
+
+*C₆H₁₂O₆ → 2C₂H₅OH + 2CO₂*
+*(Sugar → Eth...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 13">
+                    <div class="segment-label">Student (13 words)</div>
+                    <div class="segment-text">Wait, so bread contains alcohol? Have I been accidentally drinking this whole time?
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 26">
+                    <div class="segment-label">AI (26 words)</div>
+                    <div class="segment-text">*"Technically yes, but only about 0.1-0.2%. You'd need to eat approximately 50 loaves of bread to equal one beer. Though I admire your commitment to scientific experimentation!"*
+</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 23">
+                    <div class="segment-label">Student (23 words)</div>
+                    <div class="segment-text">Challenge... no, wait, that would be a terrible idea. What about chocolate? Please tell me chocolate is normal.
+
+=== Page 03 ===
+**CHOCOLATE: THE PERFECT DRUG**
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 44">
+                    <div class="segment-label">AI (44 words)</div>
+                    <div class="segment-text">*"Ah, mon ami, chocolate is the most sophisticated drug delivery system ever invented! It contains:*
+
+*- Theobromine (mild stimulant, toxic to dogs)*
+*- Caffeine (because sugar isn't enough)*
+*- Pheny...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 14">
+                    <div class="segment-label">Student (14 words)</div>
+                    <div class="segment-text">So chocolate is actually drugs? Everything I love is either chemical warfare or drugs?
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 42">
+                    <div class="segment-label">AI (42 words)</div>
+                    <div class="segment-text">*"Welcome to food science! But wait, there's more! The melting point of cocoa butter is 34-38°C, just below body temperature. This means chocolate literally melts in your mouth at the perfect rate to ...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 22">
+                    <div class="segment-label">Student (22 words)</div>
+                    <div class="segment-text">I don't know whether to be amazed or terrified that humans figured all this out by accident.
+
+**THE GREAT FERMENTATION CONSPIRACY**
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 23">
+                    <div class="segment-label">AI (23 words)</div>
+                    <div class="segment-text">*"Ah, but we haven't discussed fermentation—where we intentionally let food rot in controlled ways! Cheese, wine, kimchi, sourdough—all delicious decay!"*
+</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 10">
+                    <div class="segment-label">Student (10 words)</div>
+                    <div class="segment-text">You're telling me cheese is just controlled milk rot?
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 31">
+                    <div class="segment-label">AI (31 words)</div>
+                    <div class="segment-text">*"Precisely! We add specific bacteria and mold cultures that compete with dangerous microorganisms. It's like hiring good gangs to fight bad gangs, except the result is delicious instead of dystopian!...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 17">
+                    <div class="segment-label">Student (17 words)</div>
+                    <div class="segment-text">This is simultaneously the most educational and disturbing conversation I've ever had.
+
+=== Page 04 ===
+**MOLECULAR GASTRONOMY MAYHEM**
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 55">
+                    <div class="segment-label">AI (55 words)</div>
+                    <div class="segment-text">*"But wait! Modern chefs have taken this further with molecular gastronomy—using science equipment to create impossible foods:*
+
+*- Spherical olives made with sodium alginate*
+*- Liquid nitrogen ice c...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 14">
+                    <div class="segment-label">Student (14 words)</div>
+                    <div class="segment-text">So somewhere out there, a chef is using laboratory equipment to make a salad?
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 23">
+                    <div class="segment-label">AI (23 words)</div>
+                    <div class="segment-text">*"Exactement! And charging $200 for the privilege! Though to be fair, liquid nitrogen safety training is expensive, and insurance for exploding desserts is astronomical."*
+</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 4">
+                    <div class="segment-label">Student (4 words)</div>
+                    <div class="segment-text">Wait, desserts can explode?
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 32">
+                    <div class="segment-label">AI (32 words)</div>
+                    <div class="segment-text">*"Only the really good ones! When you trap CO₂ in chocolate using pressure, you get 'popping candy' that literally explodes in your mouth. It's candy AND fireworks!"*
+
+**THE PHYSICS OF PERFECT PASTA**...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 15">
+                    <div class="segment-label">Student (15 words)</div>
+                    <div class="segment-text">Okay, I need something calming. How about pasta? That's just wheat and water, right?
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 44">
+                    <div class="segment-label">AI (44 words)</div>
+                    <div class="segment-text">*"Ah, pasta! Where we study fluid dynamics, protein networks, and starch gelatinization! The perfect al dente texture occurs when:*
+
+*1. Starch granules swell but don't burst*
+*2. Gluten proteins form...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 13">
+                    <div class="segment-label">Student (13 words)</div>
+                    <div class="segment-text">OF COURSE it is. Is there ANY food that's just... food?
+
+=== Page 05 ===</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 33">
+                    <div class="segment-label">AI (33 words)</div>
+                    <div class="segment-text">*"Well, there's salt. Salt is just... oh wait, no. Salt enhances flavor by suppressing bitter tastes while amplifying sweet and umami through ion channel interactions with taste receptors. Even salt i...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 10">
+                    <div class="segment-label">Student (10 words)</div>
+                    <div class="segment-text">I give up. My entire diet is a chemistry set.
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 40">
+                    <div class="segment-label">AI (40 words)</div>
+                    <div class="segment-text">*"Oui! But a delicious chemistry set! And now you understand why cooking shows are so dramatic—every episode is literally playing with fire, acids, bases, chemical reactions, and potential food poison...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 9">
+                    <div class="segment-label">Student (9 words)</div>
+                    <div class="segment-text">So Gordon Ramsay is essentially a very angry chemist?
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 35">
+                    <div class="segment-label">AI (35 words)</div>
+                    <div class="segment-text">*"The angriest! But his fury is scientifically justified. When someone overcooks fish, they're literally denaturing proteins beyond optimal texture parameters. His screaming is just peer review with m...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 9">
+                    <div class="segment-label">Student (9 words)</div>
+                    <div class="segment-text">This has been incredible and terrifying. Any final thoughts?
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 32">
+                    <div class="segment-label">AI (32 words)</div>
+                    <div class="segment-text">*"Remember: Every time you cook, you're performing chemistry experiments that took humanity thousands of years to perfect. Respect the science, embrace the delicious chaos, and always keep a fire exti...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 9">
+                    <div class="segment-label">Student (9 words)</div>
+                    <div class="segment-text">And here I thought I was just making dinner.
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 34">
+                    <div class="segment-label">AI (34 words)</div>
+                    <div class="segment-text">*"Mon ami, you were never 'just' making dinner. You were conducting a symphony of chemical reactions, enzyme interactions, and thermodynamic processes—all orchestrated to create something greater than...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 19">
+                    <div class="segment-label">Student (19 words)</div>
+                    <div class="segment-text">You've completely ruined my relationship with food... and somehow made it more wonderful at the same time.
+
+=== Page 06 ===</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 38">
+                    <div class="segment-label">AI (38 words)</div>
+                    <div class="segment-text">*"That, mon ami, is the true magic of science—it makes everything simultaneously more complex and more beautiful. Now go forth and cook with the confidence of someone who understands they're wielding ...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 18">
+                    <div class="segment-label">Student (18 words)</div>
+                    <div class="segment-text">I'm going to make a grilled cheese sandwich and think about the Maillard reaction the entire time.
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 30">
+                    <div class="segment-label">AI (30 words)</div>
+                    <div class="segment-text">*"Parfait! And when it browns perfectly, remember—you've just conducted a successful chemical reaction at the molecular level. You're not just a cook, you're a kitchen chemist!"*
+</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 9">
+                    <div class="segment-label">Student (9 words)</div>
+                    <div class="segment-text">Thanks, Claud-ius! Say hi to Claude for me!
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 62">
+                    <div class="segment-label">AI (62 words)</div>
+                    <div class="segment-text">*"I will! He'll be so jealous that I got to talk about exploding desserts while he's stuck explaining tax policy. Au revoir, kitchen scientist!"*
+
+**[End of Culinary Chemistry Chaos]**
+
+**Bonus Chemis...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 9">
+                    <div class="segment-label">Student (9 words)</div>
+                    <div class="segment-text">You couldn't resist one more fact, could you?
+</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 13">
+                    <div class="segment-label">AI (13 words)</div>
+                    <div class="segment-text">*"Never! Science facts are like potato chips—impossible to stop at just one!"*</div>
+                </div>
+            
+            </div>
+        </div>
+        
+        <div class="transcript" id="S02-K3-Q9.txt">
+            <h2>S02-K3-Q9.txt</h2>
+            <div class="stats">
+                <span class="stat ai-stat">AI: 1154 words (100.0%)</span>
+                <span class="stat student-stat">Student: 0 words (0.0%)</span>
+                <span class="stat total-stat">Total: 1154 words</span>
+            </div>
+            <div class="content">
+        
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 1154">
+                    <div class="segment-label">AI (1154 words)</div>
+                    <div class="segment-text">**STEP 1: COGNITIVE MAPPING**   
+
+ 
+
+*Tone: Analytical, systematic, and discovery-oriented—like a research scientist exploring neural patterns.*   
+
+ 
+
+---   
+
+ 
+
+**Brain-Computer Interface Specialist...</div>
+                </div>
+            
+            </div>
+        </div>
+        
+        <div class="transcript" id="S08-P7-L5.txt">
+            <h2>S08-P7-L5.txt</h2>
+            <div class="stats">
+                <span class="stat ai-stat">AI: 2003 words (100.0%)</span>
+                <span class="stat student-stat">Student: 0 words (0.0%)</span>
+                <span class="stat total-stat">Total: 2003 words</span>
+            </div>
+            <div class="content">
+        
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 2003">
+                    <div class="segment-label">AI (2003 words)</div>
+                    <div class="segment-text">=== Page 00 ===
+**PSYCHOLOGICAL THERAPY FOR BROKEN ALGORITHMS**
+
+Dr. Debugging: *"Welcome to Algorithm Anonymous. I'm Dr. Debugging, and today we're helping your sorting algorithm work through its dee...</div>
+                </div>
+            
+            </div>
+        </div>
+        
+        <div class="transcript" id="S09-E1-K6.txt">
+            <h2>S09-E1-K6.txt</h2>
+            <div class="stats">
+                <span class="stat ai-stat">AI: 2035 words (100.0%)</span>
+                <span class="stat student-stat">Student: 0 words (0.0%)</span>
+                <span class="stat total-stat">Total: 2035 words</span>
+            </div>
+            <div class="content">
+        
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 2035">
+                    <div class="segment-label">AI (2035 words)</div>
+                    <div class="segment-text">=== Page 00 ===
+**EXISTENTIAL CRISIS SUPPORT GROUP FOR MATHEMATICAL CONSTANTS**
+
+Session Facilitator: *"Welcome everyone to Constants Anonymous. I'm your session facilitator, and today we're exploring...</div>
+                </div>
+            
+            </div>
+        </div>
+        
+</body>
+</html>
+        

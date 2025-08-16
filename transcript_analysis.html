@@ -1,0 +1,461 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Student Transcript Analysis</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }
+        .summary { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .transcript { background: white; margin: 20px 0; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .stats { margin-bottom: 15px; }
+        .stat { display: inline-block; margin-right: 20px; padding: 5px 10px; border-radius: 4px; font-weight: bold; }
+        .ai-stat { background-color: #e3f2fd; color: #1976d2; }
+        .student-stat { background-color: #f3e5f5; color: #7b1fa2; }
+        .total-stat { background-color: #e8f5e8; color: #388e3c; }
+        .segment { margin: 10px 0; padding: 10px; border-radius: 4px; border-left: 4px solid; }
+        .ai-segment { background-color: #e3f2fd; border-left-color: #1976d2; }
+        .student-segment { background-color: #f3e5f5; border-left-color: #7b1fa2; }
+        .low-confidence { opacity: 0.7; border-style: dashed; }
+        .segment-label { font-weight: bold; font-size: 0.9em; margin-bottom: 5px; }
+        .segment-text { font-size: 0.85em; line-height: 1.4; }
+        .navigation { position: fixed; top: 20px; right: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 200px; }
+        .nav-item { display: block; padding: 5px; text-decoration: none; color: #333; border-radius: 3px; margin: 2px 0; }
+        .nav-item:hover { background-color: #f0f0f0; }
+        h1, h2 { color: #333; }
+        .filter-controls { margin: 15px 0; }
+        .filter-btn { padding: 8px 16px; margin: 5px; border: none; border-radius: 4px; cursor: pointer; background-color: #ddd; }
+        .filter-btn.active { background-color: #1976d2; color: white; }
+    </style>
+    <script>
+        function showAll() {
+            document.querySelectorAll('.transcript').forEach(t => t.style.display = 'block');
+            setActiveFilter('all');
+        }
+        function showHighEngagement() {
+            document.querySelectorAll('.transcript').forEach(t => {
+                const studentRatio = parseFloat(t.querySelector('.student-stat').textContent.match(/(\d+\.\d+)%/)[1]) / 100;
+                t.style.display = studentRatio > 0.3 ? 'block' : 'none';
+            });
+            setActiveFilter('high');
+        }
+        function showLowEngagement() {
+            document.querySelectorAll('.transcript').forEach(t => {
+                const studentRatio = parseFloat(t.querySelector('.student-stat').textContent.match(/(\d+\.\d+)%/)[1]) / 100;
+                t.style.display = studentRatio <= 0.3 ? 'block' : 'none';
+            });
+            setActiveFilter('low');
+        }
+        function setActiveFilter(filter) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[onclick*="${filter}"]`).classList.add('active');
+        }
+        window.onload = () => setActiveFilter('all');
+    </script>
+</head>
+<body>
+    <h1>AI-Student Transcript Analysis</h1>
+    
+    <div class="summary">
+        <h2>Summary Statistics</h2>
+        <p><strong>Total Transcripts:</strong> 8</p>
+        <p><strong>Average Student Engagement:</strong> 0.4%</p>
+        <p><strong>Analysis Method:</strong> Pattern-based speaker identification with confidence scoring</p>
+        
+        <div class="filter-controls">
+            <button class="filter-btn active" onclick="showAll()">Show All</button>
+            <button class="filter-btn" onclick="showHighEngagement()">High Engagement (>30%)</button>
+            <button class="filter-btn" onclick="showLowEngagement()">Low Engagement (≤30%)</button>
+        </div>
+    </div>
+    
+    <div class="navigation">
+        <h3>Transcripts</h3>
+        <a href="#S01-M5-R7.txt" class="nav-item">S01-M5-R7.txt (2.4%)</a>
+<a href="#S04-H9-X1.txt" class="nav-item">S04-H9-X1.txt (0.4%)</a>
+<a href="#S10-R3-Z7.txt" class="nav-item">S10-R3-Z7.txt (0.0%)</a>
+<a href="#S02-K3-Q9.txt" class="nav-item">S02-K3-Q9.txt (0.0%)</a>
+<a href="#S07-C9-M2.txt" class="nav-item">S07-C9-M2.txt (0.0%)</a>
+<a href="#S08-P7-L5.txt" class="nav-item">S08-P7-L5.txt (0.0%)</a>
+<a href="#S06-B4-J8.txt" class="nav-item">S06-B4-J8.txt (0.0%)</a>
+<a href="#S09-E1-K6.txt" class="nav-item">S09-E1-K6.txt (0.0%)</a>
+
+    </div>
+
+        <div class="transcript" id="S01-M5-R7.txt">
+            <h2>S01-M5-R7.txt</h2>
+            <div class="stats">
+                <span class="stat ai-stat">AI: 1436 words (97.6%)</span>
+                <span class="stat student-stat">Student: 36 words (2.4%)</span>
+                <span class="stat total-stat">Total: 1472 words</span>
+            </div>
+            <div class="content">
+        
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 203">
+                    <div class="segment-label">AI (203 words)</div>
+                    <div class="segment-text">=== Page 00 ===
+**STEP 1: LEARNING ASSESSMENT**
+*Quantum Computing Instructor Introduction:*
+*"Greetings! I'm here to determine your optimal quantum learning pathway. I'll pose several focused
+questio...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 3">
+                    <div class="segment-label">Student (3 words)</div>
+                    <div class="segment-text">abstract mathematical formulations</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 206">
+                    <div class="segment-label">AI (206 words)</div>
+                    <div class="segment-text">Excellent. You flourish with mathematical rigor, formal structures, and precise notation—no
+metaphors needed, just focused quantum mechanics. Let's commence.
+### **STEP 3: QUANTUM EXPLORATION**
+**Hist...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 13">
+                    <div class="segment-label">Student (13 words)</div>
+                    <div class="segment-text">A cryptographic system must factor a 2048-bit RSA modulus. The classical approach requires</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 153">
+                    <div class="segment-label">AI (153 words)</div>
+                    <div class="segment-text">testing approximately 2^1024 potential factors—computationally infeasible even with modern
+supercomputers.
+Exceptional selection. Your scenario demonstrates a fundamental constraint: **exponential cla...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 12">
+                    <div class="segment-label">Student (12 words)</div>
+                    <div class="segment-text">The quantum state |ψ⟩ = (1/√N)Σ|x⟩ represents a uniform superposition over N computational</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 188">
+                    <div class="segment-label">AI (188 words)</div>
+                    <div class="segment-text">basis states simultaneously. Classically, this would require storing and manipulating N separate
+probability amplitudes, where N = 2^n for n qubits. This demands exponential memory resources
+and proce...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 3">
+                    <div class="segment-label">Student (3 words)</div>
+                    <div class="segment-text">1. Memory Ratio Calculation:</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 246">
+                    <div class="segment-label">AI (246 words)</div>
+                    <div class="segment-text">- Quantum: n qubits store 2^n amplitude states
+- Classical: 2^n complex numbers requiring 2 × 2^n × 64 bits
+- Ratio: Classical/Quantum = (2 × 2^n × 64)/(n × 2) = 64 × 2^n/n
+- For n=1024: ratio ≈ 64 × ...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 3">
+                    <div class="segment-label">Student (3 words)</div>
+                    <div class="segment-text">**Quantum Transformation Derivations:**</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 249">
+                    <div class="segment-label">AI (249 words)</div>
+                    <div class="segment-text">1. **Initial Superposition State:**
+|ψ₁⟩ = H⊗n|0⟩⊗n = (1/√2^n)Σ_{x=0}^{2^n-1}|x⟩
+2. **Oracle Function Evaluation:**
+|ψ₂⟩ = (1/√2^n)Σ_{x=0}^{2^n-1}|x⟩|f(x)⟩
+Information entangled: Input x and function ...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 2">
+                    <div class="segment-label">Student (2 words)</div>
+                    <div class="segment-text">**Complexity Calculations:**</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 191">
+                    <div class="segment-label">AI (191 words)</div>
+                    <div class="segment-text">1. **Quantum Operations for 2048-bit RSA:**
+- Shor's algorithm: O((log N)³) = O(2048³) ≈ 8.6 × 10⁹ gates
+- Including error correction overhead: ~10¹² - 10¹³ logical gates
+2. **Classical vs Quantum Rat...</div>
+                </div>
+            
+            </div>
+        </div>
+        
+        <div class="transcript" id="S04-H9-X1.txt">
+            <h2>S04-H9-X1.txt</h2>
+            <div class="stats">
+                <span class="stat ai-stat">AI: 1871 words (99.6%)</span>
+                <span class="stat student-stat">Student: 8 words (0.4%)</span>
+                <span class="stat total-stat">Total: 1879 words</span>
+            </div>
+            <div class="content">
+        
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.90, Words: 256">
+                    <div class="segment-label">AI (256 words)</div>
+                    <div class="segment-text">=== Page 00 ===
+Q: DeepMind A: Researcher
+Q:
+LLM %$# — AE: GENOM XSTR
+AT R#R RTRRSA: **
+UOS! YNM#BTLMT AI RYRTS. XYFHBTRY ZRI, F#RT L #slee ele, LAM
+XRYA TY#AS US. KM Rie] #olti RS, AY Yy TR,
+Wy
+wy — ...</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.80, Words: 250">
+                    <div class="segment-label">AI (250 words)</div>
+                    <div class="segment-text">Ys 2 (nsy sM RO
+Q:
+FR#T! R#RY Tsi, ZsMNRO |O, #LIOO R#N RYY, Tits
+OPR Ris, DTIRG. L#TYR YR#RIYR, PRYT, INR Roo)
+(Mi RYMYO, (ROLO YW) :
+Rt OYROINI#Y: Ry) O #TU#VYOY *
+MYO: TRI Msm, UYO) OT OlY— #TR R#
+...</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 238">
+                    <div class="segment-label">AI (238 words)</div>
+                    <div class="segment-text">M#R LR#TYNMRY ROO, URYO OITO, ##R T#MsAY
+lyot?
+Q:
+Ry +250 1: #RR#O
++s)
+M#RRR#TYN, RYRY \ NN() \) R#M) \t\) tt, 18:
+L"TsYRMY: Oims Rys,
+2. ROT O##T: R#M# (Gradient Descent R#Y) FRMYO (iO), 1O
+OR#RRYNT#...</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 156">
+                    <div class="segment-label">AI (156 words)</div>
+                    <div class="segment-text">LP NN(t)=wt-kwt'2=21-0.2t2, P(0.2)=0.4-0.008=0.392, NN(0.2)=tanh*(-0.04)*sin(0.2)=0.191, JRLAYX#Z
+#RI 0.2
+Q:
+RR RYD #TO oly IY**
+(R#TT OOyO Y#, (XR PO Ryy: RRR YN, OOY
+\(t=0.2\) Y#TR# #OY Z# GRI FIRYM...</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 177">
+                    <div class="segment-label">AI (177 words)</div>
+                    <div class="segment-text">KRYRMG##RIR, WON 0.192 M#Y 0.392 IOOIIR RIR P#R#O
+Q:
+RR RYO: YF# OY RO
+(RF#RIIR \(k=0.2\), \(\omega=1\), RYN), (Rs#tr FOR Rit.)
+=== Page 07 ===
+RRR MYO 1: ROO I
+Yi: YOT RY.
+1 ORYR MOR:
+\l
+NN(t) = \fra...</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 316">
+                    <div class="segment-label">AI (316 words)</div>
+                    <div class="segment-text">T#IR# MN ORM Ry
+Q:
+RR RPR \( NN(t) \) ROR #RD YR
+(FRM \ NN(t) = tanh*{-kt} \sin(\omega t)\), RY \( k=0.2\), \( \omega=1\))
+ytt YRR 1: RRM Os
+1 — RPO (RRU) :
+\l
+NN(t) =-k tanh*{-kt} \sin(\omega t) + \o...</div>
+                </div>
+            
+                <div class="segment student-segment high-confidence" 
+                     title="Speaker: Student, Confidence: 0.90, Words: 8">
+                    <div class="segment-label">Student (8 words)</div>
+                    <div class="segment-text">RO (R : NN(05)=tanh%(-0.2*0.5)*(-0.88c0s(0.5)+0.592sin(0.5)= = RY i Wr P</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 78">
+                    <div class="segment-label">AI (78 words)</div>
+                    <div class="segment-text">(0.5)=0.5-0.2*0.25-0. 1467#0.5°3=0.432 =RM#T{L# P(0.5)=2*0.5-0.1*2*0.52=0.95
+Q:
+MNT O#RY YO# #M#T |isix, Yl RI#O IIIY:
+Rt (RIYD RR (OR# k-0.2, o=1)
+RR. RONO
+TYRR# ZR:
+\[ NN(t) =tanh*{-kt} sin(ot) \]
+\...</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 269">
+                    <div class="segment-label">AI (269 words)</div>
+                    <div class="segment-text">#YR RRR
+Q:
+RRR ** OP RRR) OIR
+(RF \( NN(t) =tanh {-kt}\sin(\omega t) \), RR \( k=-0.2\\), \( \omega=1\))
+RRR YR 1: YRN #OY
+\l
+NN(t) =tanh {-0.2t}\sin(t)
+\l
+2. R= NO (YORur) :
+\l
+\begin {align*}
+NN(t) ...</div>
+                </div>
+            
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 0.80, Words: 131">
+                    <div class="segment-label">AI (131 words)</div>
+                    <div class="segment-text">TMO: P (1) =1-0.2=-08 =RRist: P (1) =1-0.2*12-0.1467*13=0.653 MOI:
+P (1) =1-0.2* 142-0, 1467*143+0.032*1/4=0.685 F#OY{R: NN(1)=tanh(-0.2)sin(1)=0.689 fs t #OY
+IPNR#, ##RRRIRY R#
+Q:
+RR RYD O#O Rs
+RRR],...</div>
+                </div>
+            
+            </div>
+        </div>
+        
+        <div class="transcript" id="S10-R3-Z7.txt">
+            <h2>S10-R3-Z7.txt</h2>
+            <div class="stats">
+                <span class="stat ai-stat">AI: 2376 words (100.0%)</span>
+                <span class="stat student-stat">Student: 0 words (0.0%)</span>
+                <span class="stat total-stat">Total: 2376 words</span>
+            </div>
+            <div class="content">
+        
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 2376">
+                    <div class="segment-label">AI (2376 words)</div>
+                    <div class="segment-text">=== Page 00 ===
+**INTERDIMENSIONAL LINGUISTICS: WHEN GRAMMAR RULES MEET QUANTUM MECHANICS**
+Prof. Verbatim: *"Welcome to Advanced Theoretical Grammar, where we explore what happens when language meets...</div>
+                </div>
+            
+            </div>
+        </div>
+        
+        <div class="transcript" id="S02-K3-Q9.txt">
+            <h2>S02-K3-Q9.txt</h2>
+            <div class="stats">
+                <span class="stat ai-stat">AI: 1154 words (100.0%)</span>
+                <span class="stat student-stat">Student: 0 words (0.0%)</span>
+                <span class="stat total-stat">Total: 1154 words</span>
+            </div>
+            <div class="content">
+        
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 1154">
+                    <div class="segment-label">AI (1154 words)</div>
+                    <div class="segment-text">**STEP 1: COGNITIVE MAPPING**   
+*Tone: Analytical, systematic, and discovery-oriented—like a research scientist exploring neural patterns.*   
+---   
+**Brain-Computer Interface Specialist:**   
+Welco...</div>
+                </div>
+            
+            </div>
+        </div>
+        
+        <div class="transcript" id="S07-C9-M2.txt">
+            <h2>S07-C9-M2.txt</h2>
+            <div class="stats">
+                <span class="stat ai-stat">AI: 1483 words (100.0%)</span>
+                <span class="stat student-stat">Student: 0 words (0.0%)</span>
+                <span class="stat total-stat">Total: 1483 words</span>
+            </div>
+            <div class="content">
+        
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 1483">
+                    <div class="segment-label">AI (1483 words)</div>
+                    <div class="segment-text">=== Page 00 ===
+**CULINARY CHEMISTRY CHAOS ASSESSMENT**
+Molecular Gastronomy Assistant: *"Bonjour! I am Claude's cousin, Claud-ius, your culinary chemistry companion! Today we transform kitchen disast...</div>
+                </div>
+            
+            </div>
+        </div>
+        
+        <div class="transcript" id="S08-P7-L5.txt">
+            <h2>S08-P7-L5.txt</h2>
+            <div class="stats">
+                <span class="stat ai-stat">AI: 2003 words (100.0%)</span>
+                <span class="stat student-stat">Student: 0 words (0.0%)</span>
+                <span class="stat total-stat">Total: 2003 words</span>
+            </div>
+            <div class="content">
+        
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 2003">
+                    <div class="segment-label">AI (2003 words)</div>
+                    <div class="segment-text">=== Page 00 ===
+**PSYCHOLOGICAL THERAPY FOR BROKEN ALGORITHMS**
+Dr. Debugging: *"Welcome to Algorithm Anonymous. I'm Dr. Debugging, and today we're helping your sorting algorithm work through its deep...</div>
+                </div>
+            
+            </div>
+        </div>
+        
+        <div class="transcript" id="S06-B4-J8.txt">
+            <h2>S06-B4-J8.txt</h2>
+            <div class="stats">
+                <span class="stat ai-stat">AI: 1434 words (100.0%)</span>
+                <span class="stat student-stat">Student: 0 words (0.0%)</span>
+                <span class="stat total-stat">Total: 1434 words</span>
+            </div>
+            <div class="content">
+        
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 1434">
+                    <div class="segment-label">AI (1434 words)</div>
+                    <div class="segment-text">=== Page 00 ===
+**STEP 1: COSMIC COMEDY ASSESSMENT**
+*Astrophysics Humor Specialist Introduction:*
+*"Greetings, earthling! I'm your temporary space-time comedy calibrator. My mission: determine whethe...</div>
+                </div>
+            
+            </div>
+        </div>
+        
+        <div class="transcript" id="S09-E1-K6.txt">
+            <h2>S09-E1-K6.txt</h2>
+            <div class="stats">
+                <span class="stat ai-stat">AI: 2035 words (100.0%)</span>
+                <span class="stat student-stat">Student: 0 words (0.0%)</span>
+                <span class="stat total-stat">Total: 2035 words</span>
+            </div>
+            <div class="content">
+        
+                <div class="segment ai-segment high-confidence" 
+                     title="Speaker: AI, Confidence: 1.00, Words: 2035">
+                    <div class="segment-label">AI (2035 words)</div>
+                    <div class="segment-text">=== Page 00 ===
+**EXISTENTIAL CRISIS SUPPORT GROUP FOR MATHEMATICAL CONSTANTS**
+Session Facilitator: *"Welcome everyone to Constants Anonymous. I'm your session facilitator, and today we're exploring ...</div>
+                </div>
+            
+            </div>
+        </div>
+        
+</body>
+</html>
+        
