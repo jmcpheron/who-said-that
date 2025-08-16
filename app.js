@@ -931,7 +931,23 @@ class TranscriptAnalyzer {
             </div>
             <div class="file-card-stats">
                 <div class="stat-item">
-                    <span class="stat-label">Student Engagement:</span>
+                    <span class="stat-label">AI Words:</span>
+                    <span class="stat-value">${transcript.aiWords.toLocaleString()}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Student Words:</span>
+                    <span class="stat-value">${transcript.studentWords.toLocaleString()}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Words:</span>
+                    <span class="stat-value">${transcript.totalWords.toLocaleString()}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">% AI:</span>
+                    <span class="stat-value">${((transcript.aiWords / transcript.totalWords) * 100).toFixed(1)}%</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">% Student:</span>
                     <span class="stat-value engagement-${engagementClass}">
                         ${transcript.studentRatio.toFixed(1)}%
                     </span>
@@ -941,14 +957,6 @@ class TranscriptAnalyzer {
                     <span class="stat-value confidence-${confidenceClass}">
                         ${transcript.avgConfidence.toFixed(1)}%
                     </span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Total Words:</span>
-                    <span class="stat-value">${transcript.totalWords.toLocaleString()}</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">AI vs Student:</span>
-                    <span class="stat-value">${transcript.aiWords} vs ${transcript.studentWords}${transcript.unknownWords > 0 ? ` (+${transcript.unknownWords} unknown)` : ''}</span>
                 </div>
                 <div class="stat-item">
                     <span class="stat-label">Coverage:</span>
